@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Image from "next/image";
+import Link from "next/link";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
@@ -18,13 +18,16 @@ export default function Home() {
 				<h1 className={styles.title}>science fund</h1>
 
 				<div className={styles.grid}>
-					<a href='/donate' className={styles.button}>
-						<h2>Donate</h2>
-					</a>
-
-					<a href='/trace' className={styles.button}>
-						<h2>Trace</h2>
-					</a>
+					<div className={styles.button}>
+						<Link href='/donate'>
+							<h2>Donate</h2>
+						</Link>
+					</div>
+					<div className={styles.button}>
+						<Link href='/trace'>
+							<h2>Trace</h2>
+						</Link>
+					</div>
 				</div>
 			</main>
 
