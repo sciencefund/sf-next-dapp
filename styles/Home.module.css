@@ -1,10 +1,9 @@
 .container {
 	min-height: 100vh;
 	padding: 0;
-	height: 100vh;
 }
 
-.main {
+.landing {
 	color: #ffffff;
 	padding: 5rem 0;
 	flex: 1;
@@ -34,6 +33,11 @@
 	text-transform: uppercase;
 	line-height: 1.15;
 	font-size: 5rem;
+}
+.sectionTitle {
+	margin: 0;
+	line-height: 1;
+	font-size: 2rem;
 }
 
 .slogan {
@@ -92,4 +96,8 @@
 	.slogan {
 		font-size: 40px;
 	}
+}
+
+.curate {
+	margin: 5%;
 }
