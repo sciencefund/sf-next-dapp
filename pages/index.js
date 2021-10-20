@@ -5,27 +5,28 @@ import NavBar from "../components/navbar";
 
 export default function Home() {
 	return (
-		<div className='container mx-auto m-0'>
+		<div className='container mx-auto max-w-screen-lg'>
 			<Head>
 				<title>Science Fund</title>
 				<meta name='description' content='Science Fund Home Page' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-			<main>
-				<section className='flex bg-dark-water h-screen w-full'>
-					<NavBar />
-
-					<div className='flex flex-col items-center justify-center text-white '>
-						<p className='text-grey-800 text-2xl italic mb-4 '>
+			<main className=''>
+				<NavBar />
+				<section className='bg-dark-water bg-right-bottom bg-cover w-full'>
+					<div className='text-center text-white mx-auto w-1/2 py-48'>
+						<p className='text-grey-800 text-3xl italic mb-4 '>
 							Reimagining the path to discovery
 						</p>
-						<h1 className='text-grey-900 text-6xl uppercase mb-6'>
+						<h1 className='text-grey-900 text-6xl uppercase mb-6 font-bold tracking-wide'>
 							science fund
 						</h1>
 
-						<div className='flex flex-row justify-between '>
-							<BigButton label='Donate' />
-							<BigButton label='Trace' />
+						<div className='flex flex-row justify-center '>
+							<BigButton
+								label='Stay Tuned'
+								href='https://docs.google.com/forms/d/e/1FAIpQLSf7upF5dRzrnZUDeW2NgEcyRkeaeFCDpDKFwMHMfTr6zPObLg/viewform'
+							/>
 						</div>
 					</div>
 				</section>
