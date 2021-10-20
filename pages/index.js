@@ -1,28 +1,32 @@
 import Head from "next/head";
 import TopicCard from "../components/topicCard";
 import BigButton from "../components/bigButton";
+import NavBar from "../components/navbar";
 
 export default function Home() {
 	return (
-		<div className='container mx-auto w-full'>
+		<div className='container mx-auto m-0'>
 			<Head>
 				<title>Science Fund</title>
 				<meta name='description' content='Science Fund Home Page' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
+			<main>
+				<section className='flex bg-dark-water h-screen w-full'>
+					<NavBar />
 
-			<main className='container mx-auto'>
-				<section className='flex flex-col items-center justify-center  bg-dark-water text-white h-screen w-screen '>
-					<p className='text-grey-800 text-2xl italic mt-34 mb-4 '>
-						Reimagining the path to discovery
-					</p>
-					<h1 className='text-grey-900 text-6xl uppercase mb-6'>
-						science fund
-					</h1>
+					<div className='flex flex-col items-center justify-center text-white '>
+						<p className='text-grey-800 text-2xl italic mb-4 '>
+							Reimagining the path to discovery
+						</p>
+						<h1 className='text-grey-900 text-6xl uppercase mb-6'>
+							science fund
+						</h1>
 
-					<div className='flex flex-row justify-between '>
-						<BigButton label='Donate' />
-						<BigButton label='Trace' />
+						<div className='flex flex-row justify-between '>
+							<BigButton label='Donate' />
+							<BigButton label='Trace' />
+						</div>
 					</div>
 				</section>
 				{/* Curated Pool */}
