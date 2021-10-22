@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@tailwindcss/forms": "^0.3.4",
     "hardhat": "^2.6.6",
     "next": "11.1.2",
     "react": "17.0.2",

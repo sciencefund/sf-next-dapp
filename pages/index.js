@@ -4,10 +4,12 @@ import Head from "next/head";
 import TopicCard from "../components/topicCard";
 import BigButton from "../components/bigButton";
 import ConnectWallet from "../components/connectWallet";
+import DonateWindow from "../components/donateWindow";
+
 
 export default function Home() {
 
-	const [initialState, setInitialState] = useState(
+	const [walletState, setWalletState] = useState(
 		{
 			userAddress: undefined,
 			selectedNetwork: undefined,
@@ -15,18 +17,21 @@ export default function Home() {
 		}
 	);
 
+	const [donateState, setDonateState] = useState(undefined);
+
 	const readWallet = async () => {
 		const [selectedAddress] = await window.ethereum.enable();
 		console.log(`connecting to ${selectedAddress}`)
-		setInitialState({ userAddress: selectedAddress });
+		setWalletState({ userAddress: selectedAddress });
 	}
 
-	const donate = () => {
-		// trigger a pop-up window 
-		if (!initialState.userAddress) {
-			readWallet();
+	const donate = async () => {
+		// set user donateState
+		if (!walletState.userAddress) {
+			await readWallet();
+			setDonateState(true);
 		} else {
-			console.log("ready to donate")
+			setDonateState(true);
 		}
 	}
 
@@ -39,7 +44,7 @@ export default function Home() {
 			</Head>
 			<body className='w-screen mx-auto' >
 				<section className='relative mx-auto bg-dark-water bg-fixed bg-cover w-screen'>
-					{initialState.userAddress ?
+					{walletState.userAddress ?
 						< ConnectWallet connect={() => { }} label="Logout" /> :
 						< ConnectWallet connect={readWallet} label="Connect Wallet" />}
 
@@ -75,8 +80,10 @@ export default function Home() {
 						</p>
 
 						<button className='bg-gray-900 text-white hover:bg-gray-700 py-2 px-4 rounded my-5' onClick={donate}>
-							{initialState.userAddress ? <h2>Mint Tokens</h2> : <h2>Connect wallet to donate</h2>}
+							{walletState.userAddress ? <h2>Mint Tokens</h2> : <h2>Connect wallet to donate</h2>}
 						</button>
+						{donateState && <DonateWindow />}
+
 					</div>
 
 					<div className='flex flex-row justify-evenly
