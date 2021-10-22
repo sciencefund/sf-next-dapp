@@ -5,7 +5,7 @@ import NavBar from "../components/navbar";
 
 export default function Home() {
 	return (
-		<div className='container mx-auto max-w-screen-lg'>
+		<div className='container mx-auto max-w-screen-lg font-serif'>
 			<Head>
 				<title>Science Fund</title>
 				<meta name='description' content='Science Fund Home Page' />
@@ -46,6 +46,44 @@ export default function Home() {
 							eu fugiat nulla pariatur. Excepteur sint occaecat
 							cupidatat non proident, sunt in culpa qui officia
 							deserunt mollit anim id est laborum
+						</p>
+
+						<button className='bg-gray-900 text-white hover:bg-gray-700 py-2 px-4 rounded my-5'>
+							<h2>Connect wallet to donate</h2>
+						</button>
+					</div>
+
+					<div className='flex flex-row justify-evenly'>
+						<TopicCard
+							imagePath='/images/topics/brain.jpg'
+							topic='Neuroscience'
+							description='Can we understand the biological basis of learning, memory, behavior and ultimately consciousness?'
+						/>
+						<TopicCard
+							imagePath='/images/topics/virus.jpg'
+							topic='Infectious Disease'
+							description='What are the chances of a superbug wiping out humanity?'
+						/>
+						<TopicCard
+							imagePath='/images/topics/earth.jpg'
+							topic='Climate Change'
+							description='Are we the first generation to feel the effect of climate change and last generation to do something about it? '
+						/>
+						<TopicCard
+							imagePath='/images/topics/microbiology.jpg'
+							topic='Microbiology'
+							description='The microbes within us and grander view of life.'
+						/>
+					</div>
+				</section>
+				{/* Granular Traceability */}
+				<section className='container mx-auto px-4'>
+					<div className='container py-10 px-10'>
+						<h1 className='text-3xl my-5'>
+							Granular Traceability{" "}
+						</h1>
+						<p className='text-base my-3'>
+							We allocate the curated pool through a
 						</p>
 
 						<button className='bg-gray-900 text-white hover:bg-gray-700 py-2 px-4 rounded my-5'>
