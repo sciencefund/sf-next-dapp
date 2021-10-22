@@ -9,7 +9,7 @@ export default function TopicCard(props) {
 
 			<button className='bg-blue-400 text-black hover:bg-blue-700 py-1 px-5 rounded my-5'>
 				<p className='text-base text-blue-900 hover:text-blue-100 mx-3'>
-					More information
+					Read more
 				</p>
 			</button>
 		</div>
