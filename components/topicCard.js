@@ -2,16 +2,16 @@ import Image from "next/image";
 
 export default function TopicCard(props) {
 	return (
-		<div className='text-white h-96 w-48 mx-3 my-1 px-1 flex flex-col justify-between from-gray-900 to-blue-900 bg-gradient-to-tl'>
-			<Image src={props.imagePath} width='200' height='200' />
-			<h2 className='text-lg px-3 font-bold'>{props.topic}</h2>
-			<p className='text-sm px-3 py-1'>{props.description}</p>
+		<div className='w-64 h-96 text-white mx-3 px-1 from-gray-900 to-blue-900 bg-gradient-to-tl'>
+			<img src={props.imagePath} width='300' height='300' />
+			<div className='text-gray-100  rounded my-5 text-left'>
+				<h2 className='text-base px-3 font-bold'>{props.topic}</h2>
 
-			<button className='bg-blue-400 text-black hover:bg-blue-700 py-1 px-5 rounded my-5'>
-				<p className='text-base text-blue-900 hover:text-blue-100 mx-3'>
-					Donate
-				</p>
-			</button>
+				<p className='text-sm px-3 py-1'>{props.description}</p>
+				<button className='text-xs text-gray-400 hover:text-blue-100 mx-3'>
+					Read More &raquo;
+				</button>
+			</div>
 		</div>
 	);
 }

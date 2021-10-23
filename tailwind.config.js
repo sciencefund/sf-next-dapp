@@ -9,10 +9,15 @@ module.exports = {
 			backgroundImage: {
 				"dark-water": "url('/images/header-bg.jpg')",
 			},
+			fontFamily: {
+				serif: ["KohSantepheap", "Georgia", "serif"],
+			},
 		},
 	},
 	variants: {
 		extend: {},
 	},
-	plugins: [],
+	plugins: [
+		require('@tailwindcss/forms'),
+	],
 };
