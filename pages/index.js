@@ -16,9 +16,7 @@ export default function Home() {
 	const context = useWeb3React();
 	const { library, account, activate } = context;
 
-	// console.log("account", account);
-	// console.log("library", library);
-	// console.log("activate", activate);
+	console.log("account", account);
 
 	const [walletState, setWalletState] = useState({
 		userAddress: undefined,
@@ -127,7 +125,13 @@ export default function Home() {
 								<h2>Connect wallet to donate</h2>
 							)}
 						</button>
-						{donateState && <DonateWindow />}
+						{donateState && (
+							<DonateWindow
+								close={() => {
+									setDonateState(false);
+								}}
+							/>
+						)}
 					</div>
 
 					<div
