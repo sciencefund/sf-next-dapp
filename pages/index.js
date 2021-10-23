@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import Head from "next/head";
 
+import detectEthereumProvider from "@metamask/detect-provider";
+
 import { useWeb3React } from "@web3-react/core";
 import { connectors } from "../context/connectors";
 
@@ -14,7 +16,9 @@ export default function Home() {
 	const context = useWeb3React();
 	const { library, account, activate } = context;
 
-	console.log(account, "account");
+	// console.log("account", account);
+	// console.log("library", library);
+	// console.log("activate", activate);
 
 	const [walletState, setWalletState] = useState({
 		userAddress: undefined,
@@ -24,16 +28,35 @@ export default function Home() {
 
 	const [donateState, setDonateState] = useState(undefined);
 
-	const readWallet = async () => {
-		const [selectedAddress] = await window.ethereum.enable();
-		console.log(`connecting to ${selectedAddress}`);
-		setWalletState({ userAddress: selectedAddress });
+	const connectWallet = async () => {
+		const provider = await detectEthereumProvider();
+		if (provider) {
+			const [selectedAddress] = await ethereum.request({
+				method: "eth_requestAccounts",
+			});
+			console.log(`connected to ${selectedAddress}`);
+
+			const chainId = await ethereum.request({ method: "eth_chainId" });
+			console.log(`selected network to ${chainId}`);
+
+			setWalletState({
+				userAddress: selectedAddress,
+				selectedNetwork: chainId,
+			});
+		} else {
+			//trigger a pop up window to link to metamask installation
+			console.log("install metamask");
+		}
+	};
+
+	const disconnectWallet = async () => {
+		setWalletState({ userAddress: undefined });
 	};
 
 	const donate = async () => {
 		// set user donateState
 		if (!walletState.userAddress) {
-			await readWallet();
+			await connectWallet();
 			setDonateState(true);
 		} else {
 			setDonateState(true);
@@ -50,10 +73,13 @@ export default function Home() {
 			<body className='w-screen mx-auto'>
 				<section className='relative mx-auto bg-dark-water bg-fixed bg-cover w-screen'>
 					{walletState.userAddress ? (
-						<ConnectWallet connect={() => {}} label='Logout' />
+						<ConnectWallet
+							connect={disconnectWallet}
+							label='Logout'
+						/>
 					) : (
 						<ConnectWallet
-							connect={readWallet}
+							connect={connectWallet}
 							label='Connect Wallet'
 						/>
 					)}
