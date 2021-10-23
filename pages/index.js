@@ -72,8 +72,10 @@ export default function Home() {
 				<section className='relative mx-auto bg-dark-water bg-fixed bg-cover w-screen'>
 					{walletState.userAddress ? (
 						<ConnectWallet
-							connect={disconnectWallet}
-							label='Logout'
+							connect={() => {
+								setDonateState(true);
+							}}
+							label='Mint Tokens'
 						/>
 					) : (
 						<ConnectWallet

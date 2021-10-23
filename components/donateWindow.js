@@ -22,9 +22,9 @@ export default function DonateWindow(props) {
 							Funding pool
 						</span>
 						<select className='block w-full mt-1 pl-5 py-1 rounded-xl bg-gray-100'>
+							<option selected>Science Fund General Pool</option>
 							<option>Neuroscience</option>
 							<option>Infectious Diseases</option>
-							<option>Science Fund General Pool</option>
 						</select>
 					</label>
 					<label className='block my-4'>
