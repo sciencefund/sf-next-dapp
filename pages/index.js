@@ -62,7 +62,7 @@ export default function Home() {
 	};
 
 	return (
-		<div className='container mx-auto font-serif'>
+		<div className='w-screen mx-auto font-serif'>
 			<Head>
 				<title>Science Fund</title>
 				<meta name='description' content='Science Fund Home Page' />
