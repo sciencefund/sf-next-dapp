@@ -2,8 +2,15 @@ import Head from "next/head";
 import TopicCard from "../components/topicCard";
 import BigButton from "../components/bigButton";
 import NavBar from "../components/navbar";
+import { useWeb3React } from '@web3-react/core';
+import { connectors } from "../context/connectors";
 
 export default function Home() {
+	const context = useWeb3React();
+  const { library, account, activate } = context;
+
+	console.log(account, 'account')
+
 	return (
 		<div className='container mx-auto max-w-screen-lg'>
 			<Head>
@@ -49,7 +56,7 @@ export default function Home() {
 						</p>
 
 						<button className='bg-gray-900 text-white hover:bg-gray-700 py-2 px-4 rounded my-5'>
-							<h2>Connect wallet to donate</h2>
+							{account ? <h2>You are connected</h2> : <h2 onClick={() => activate(connectors.Injected, err => console.log(err))}>Connect wallet to donate</h2>}
 						</button>
 					</div>
 
