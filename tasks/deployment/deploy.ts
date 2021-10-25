@@ -1,6 +1,6 @@
 import { task } from "hardhat/config";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
-import { ScienceFund__factory } from "../../typechain";
+import { ScienceFund__factory } from "../../types";
 import { TASK_DEPLOY } from "../task-names";
 
 task(TASK_DEPLOY, "Deploy contract")
