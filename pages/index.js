@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Head from "next/head";
 
@@ -6,17 +6,25 @@ import detectEthereumProvider from "@metamask/detect-provider";
 
 import { useWeb3React } from "@web3-react/core";
 import { connectors } from "../context/connectors";
+import { ethers } from "ethers"
+
+import ScienceFund from "../artifacts/contracts/ScienceFund.sol/ScienceFund.json";
 
 import TopicCard from "../components/topicCard";
 import BigButton from "../components/bigButton";
 import ConnectWallet from "../components/connectWallet";
 import DonateWindow from "../components/donateWindow";
 
+
+// contract address on localhost:8545
+//0x5FbDB2315678afecb367f032d93F642f64180aa3
+const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+
+
+
 export default function Home() {
 	const context = useWeb3React();
 	const { library, account, activate } = context;
-
-	console.log("account", account);
 
 	const [walletState, setWalletState] = useState({
 		userAddress: undefined,
@@ -26,9 +34,38 @@ export default function Home() {
 
 	const [donateState, setDonateState] = useState(undefined);
 
+	useEffect(() => {
+		readContract()
+	});
+
+	// read contract
+	const readContract = async () => {
+		console.log(typeof window.ethereum)
+		if (typeof window.ethereum !== 'undefined') {
+			const provider = new ethers.providers.Web3Provider(window.ethereum)
+			const signer = provider.getSigner()
+			const contract = new ethers.Contract(contractAddress, ScienceFund.abi, provider)
+			try {
+				console.log(await signer.getBalance())
+				console.log(await contract.deployed())
+
+			} catch (err) {
+				console.log("Read Contract Error:", err)
+			}
+
+		}
+
+	}
+
+	// send transaction
+
+
+
 	const connectWallet = async () => {
-		const provider = await detectEthereumProvider();
-		if (provider) {
+
+
+		const isMetamask = await detectEthereumProvider();
+		if (isMetamask) {
 			const [selectedAddress] = await ethereum.request({
 				method: "eth_requestAccounts",
 			});
@@ -47,9 +84,6 @@ export default function Home() {
 		}
 	};
 
-	const disconnectWallet = async () => {
-		setWalletState({ userAddress: undefined });
-	};
 
 	const donate = async () => {
 		// set user donateState
@@ -61,6 +95,8 @@ export default function Home() {
 		}
 	};
 
+
+
 	return (
 		<div className='w-screen mx-auto font-serif'>
 			<Head>
@@ -68,7 +104,7 @@ export default function Home() {
 				<meta name='description' content='Science Fund Home Page' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-			<body className='w-screen mx-auto'>
+			<div className='w-screen mx-auto'>
 				<section className='relative mx-auto bg-dark-water bg-fixed bg-cover w-screen'>
 					{walletState.userAddress ? (
 						<ConnectWallet
@@ -174,7 +210,7 @@ export default function Home() {
 						</button>
 					</div>
 				</section>
-			</body>
+			</div>
 			<footer className='flex flex-row justify-between my-2'>
 				<a>@ 2021 science fund dao</a>
 				<a href='#'>white paper</a>
