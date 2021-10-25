@@ -20,7 +20,7 @@ contract ScienceFund is ERC721 {
     mapping(uint256 => uint256) private _tokenValues;
 
 
-
+    // TODO: donate event
 
     //@notice: the main donate function 
     function donate(address donor, string memory selectedPool) public payable {
@@ -40,6 +40,8 @@ contract ScienceFund is ERC721 {
         
         //record donated value in eth
         _tokenValues[newTokenID] = msg.value;
+
+        //TODO: emit a donate event
 
     }
 
