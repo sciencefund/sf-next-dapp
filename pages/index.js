@@ -19,12 +19,24 @@ import DonateWindow from "../components/donateWindow";
 // contract address on localhost:8545
 //0x5FbDB2315678afecb367f032d93F642f64180aa3
 const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+const NETWORKS = {
+	localhost: {
+    name: "localhost",
+    color: "#666666",
+    chainId: 31337,
+    blockExplorer: "",
+    rpcUrl: "http://" + 'localhost' + ":8545",
+  }
+	}
 
 
 
 export default function Home() {
 	const context = useWeb3React();
 	const { library, account, activate } = context;
+
+	const [sftContract, setSftContract] = useState(null);
+	const [localProvider, setLocalProvider] = useState(null);
 
 	const [walletState, setWalletState] = useState({
 		userAddress: undefined,
@@ -35,7 +47,9 @@ export default function Home() {
 	const [donateState, setDonateState] = useState(undefined);
 
 	useEffect(() => {
+		if (!sftContract) {
 		readContract()
+		}
 	});
 
 	// read contract
@@ -43,8 +57,12 @@ export default function Home() {
 		console.log(typeof window.ethereum)
 		if (typeof window.ethereum !== 'undefined') {
 			const provider = new ethers.providers.Web3Provider(window.ethereum)
+			setLocalProvider(provider);
 			const signer = provider.getSigner()
-			const contract = new ethers.Contract(contractAddress, ScienceFund.abi, provider)
+			const contract = new ethers.Contract(contractAddress, ScienceFund.abi, provider);
+			const connectedContract = await contract.connect(signer)
+			setSftContract(connectedContract);
+			console.log(contract,'contract');
 			try {
 				console.log(await signer.getBalance())
 				console.log(await contract.deployed())
@@ -58,6 +76,8 @@ export default function Home() {
 	}
 
 	// send transaction
+
+	
 
 
 
@@ -94,6 +114,15 @@ export default function Home() {
 			setDonateState(true);
 		}
 	};
+
+	const mintSFT = async (amountInEth, selectedPool) => {
+		console.log('clicked')
+		const overrides = {
+			value: ethers.utils.parseEther(amountInEth.toString())
+		}
+		const tx = await sftContract.donate(walletState.userAddress, selectedPool, overrides)
+		console.log(tx,'tx');
+	}
 
 
 
@@ -165,6 +194,7 @@ export default function Home() {
 						</button>
 						{donateState && (
 							<DonateWindow
+								mintSFT={mintSFT}
 								close={() => {
 									setDonateState(false);
 								}}

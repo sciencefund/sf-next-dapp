@@ -2,11 +2,17 @@ import { loadGetInitialProps } from "next/dist/shared/lib/utils";
 import { useState } from "react";
 
 export default function DonateWindow(props) {
+	const { mintSFT } = props;
 	const [value, setValue] = useState(1);
+	const [selectedPool, setSelectedPool] = useState('Science Fund General Pool');
 	const exRate = 4146.55;
 	const userDonate = (event) => {
 		setValue(event.target.value);
 	};
+	const userChangePool = event => {
+		setSelectedPool(event.target.value);
+	}
+	console.log(selectedPool,'selected')
 
 	return (
 		<div className='fixed top-0 left-0 bg-opacity-30 bg-black h-screen w-full '>
@@ -21,7 +27,7 @@ export default function DonateWindow(props) {
 						<span className='text-gray-700 text-xl font-bold '>
 							Funding pool
 						</span>
-						<select className='block w-full mt-1 pl-5 py-1 rounded-xl bg-gray-100'>
+						<select onChange={userChangePool} value={selectedPool} className='block w-full mt-1 pl-5 py-1 rounded-xl bg-gray-100'>
 							<option selected>Science Fund General Pool</option>
 							<option>Neuroscience</option>
 							<option>Infectious Diseases</option>
@@ -44,7 +50,7 @@ export default function DonateWindow(props) {
 						</span>
 					</label>
 					<button className='bg-gray-900 text-white w-full hover:bg-gray-700 py-2 px-4 rounded my-5'>
-						<h2>Mint</h2>
+						<h2 onClick={() => mintSFT(value, selectedPool)}>Mint</h2>
 					</button>
 				</div>
 			</div>
