@@ -17,13 +17,13 @@ import DonateWindow from "../components/donateWindow";
 
 
 // contract address on localhost:8545
-//0x5FbDB2315678afecb367f032d93F642f64180aa3
-const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+//0x10C25d5032e0d1C7551BAf2F693CbF67fC4A85E2
+const contractAddress = "0x10C25d5032e0d1C7551BAf2F693CbF67fC4A85E2"
 const NETWORKS = {
 	localhost: {
     name: "localhost",
     color: "#666666",
-    chainId: 31337,
+		chainId: 31337,
     blockExplorer: "",
     rpcUrl: "http://" + 'localhost' + ":8545",
   }
@@ -74,11 +74,6 @@ export default function Home() {
 		}
 
 	}
-
-	// send transaction
-
-	
-
 
 
 	const connectWallet = async () => {

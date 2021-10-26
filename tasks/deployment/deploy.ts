@@ -3,7 +3,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-wit
 import { ScienceFund__factory } from "../../types";
 import { TASK_DEPLOY } from "../task-names";
 
-task(TASK_DEPLOY, "Deploy contract")
+task(TASK_DEPLOY, "Deploy ScienceFund Contract")
   .setAction(async (args, hre) => {
     let deployer: SignerWithAddress;
 
