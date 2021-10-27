@@ -14,10 +14,10 @@ contract ScienceFund is ERC721 {
     constructor() ERC721("ScienceFund", "SFT"){}
 
     // Mapping from token ID to funding poolId
-    mapping(uint256 => string) private _tokenFundingPools;
+    mapping(uint256 => string) public tokenFundingPools;
 
     // Mapping from token ID to donated value
-    mapping(uint256 => uint256) private _tokenValues;
+    mapping(uint256 => uint256) public tokenValues;
 
 
     // TODO: donate event
@@ -35,30 +35,31 @@ contract ScienceFund is ERC721 {
         _safeMint(donor, newTokenID);
 
         //record selected funding pools
-        _tokenFundingPools[newTokenID] = selectedPool;
+        tokenFundingPools[newTokenID] = selectedPool;
 
         
         //record donated value in eth
-        _tokenValues[newTokenID] = msg.value;
+        tokenValues[newTokenID] = msg.value;
 
         //TODO: emit a donate event
 
     }
 
     //set tokenURI to record the funding pool and the amount donated
+    // @dev: somthing is wrong here
     function tokenURI(uint256 tokenId) override public view returns(string memory){
 
         require(tokenId > 0 && tokenId <= _tokenIds.current(), "Not a valid token");
 
         string[5] memory parts;
 
-        parts[0] = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><style>.base { fill: white; font-family: serif; font-size: 14px; }</style><rect width="100%" height="100%" fill="black" /><text x="10" y="20" class="base">';
+        parts[0] = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><rect fill="black" /><text x="10" y="20">';
         
-        parts[1] = _tokenFundingPools[tokenId];
+        parts[1] = tokenFundingPools[tokenId];
 
-        parts[2] = '</text><text x="10" y="40" class="base">';
+        parts[2] = '</text><text x="10" y="40">';
 
-        parts[3] = string(abi.encodePacked(_tokenValues[tokenId], " ", "ETH"));
+        parts[3] = string(abi.encodePacked(tokenValues[tokenId], " ", "ETH"));
 
         parts[4] = '</text></svg>';
 
