@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 
 import Head from "next/head";
 
-import detectEthereumProvider from "@metamask/detect-provider";
 
 import { useWeb3React } from "@web3-react/core";
 import { connectors } from "../context/connectors";
@@ -14,16 +13,16 @@ import TopicCard from "../components/topicCard";
 import BigButton from "../components/bigButton";
 import ConnectWallet from "../components/connectWallet";
 import DonateWindow from "../components/donateWindow";
-
+import TxMessage from "../components/txMessage";
 
 // contract address on localhost:8545
-//0x5FbDB2315678afecb367f032d93F642f64180aa3
-const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+//0x10C25d5032e0d1C7551BAf2F693CbF67fC4A85E2
+const contractAddress = "0x10C25d5032e0d1C7551BAf2F693CbF67fC4A85E2"
 const NETWORKS = {
 	localhost: {
     name: "localhost",
     color: "#666666",
-    chainId: 31337,
+		chainId: 31337,
     blockExplorer: "",
     rpcUrl: "http://" + 'localhost' + ":8545",
   }
@@ -35,83 +34,69 @@ export default function Home() {
 	const context = useWeb3React();
 	const { library, account, activate } = context;
 
+	console.log('account', account);
+
 	const [sftContract, setSftContract] = useState(null);
 	const [localProvider, setLocalProvider] = useState(null);
 
-	const [walletState, setWalletState] = useState({
-		userAddress: undefined,
-		selectedNetwork: undefined,
-		balance: undefined,
-	});
 
-	const [donateState, setDonateState] = useState(undefined);
+	const [startCheckout, setStartCheckout] = useState(false);
+	const [txState, setTxState] = useState({
+		txHash: undefined,
+		txError: undefined,
+		txSuccess: undefined,
+	})
+
 
 	useEffect(() => {
 		if (!sftContract) {
-		readContract()
+			loadContract()
 		}
 	});
 
 	// read contract
-	const readContract = async () => {
-		console.log(typeof window.ethereum)
+	const loadContract = async () => {
+
 		if (typeof window.ethereum !== 'undefined') {
+
+			// load the network provider 
 			const provider = new ethers.providers.Web3Provider(window.ethereum)
 			setLocalProvider(provider);
-			const signer = provider.getSigner()
+
+
+
+			// connet to contract on the network
 			const contract = new ethers.Contract(contractAddress, ScienceFund.abi, provider);
+			const signer = provider.getSigner(0)
 			const connectedContract = await contract.connect(signer)
 			setSftContract(connectedContract);
-			console.log(contract,'contract');
+
+
 			try {
-				console.log(await signer.getBalance())
-				console.log(await contract.deployed())
+				//how to know the contract is there?
+				console.log(await provider.getBalance(account), 'get user balance')
+				console.log(await provider.getCode(contractAddress), 'contract code ')
 
 			} catch (err) {
-				console.log("Read Contract Error:", err)
+				console.log("LOAD Contract Error:", err)
 			}
 
+		} else {
+			console.log("install metamask")
 		}
 
 	}
 
-	// send transaction
-
-	
 
 
 
-	const connectWallet = async () => {
 
+	const checkoutScreen = async () => {
+		//start checkout screen
+		setStartCheckout(true);
 
-		const isMetamask = await detectEthereumProvider();
-		if (isMetamask) {
-			const [selectedAddress] = await ethereum.request({
-				method: "eth_requestAccounts",
-			});
-			console.log(`connected to ${selectedAddress}`);
-
-			const chainId = await ethereum.request({ method: "eth_chainId" });
-			console.log(`selected network to ${chainId}`);
-
-			setWalletState({
-				userAddress: selectedAddress,
-				selectedNetwork: chainId,
-			});
-		} else {
-			//trigger a pop up window to link to metamask installation
-			console.log("install metamask");
-		}
-	};
-
-
-	const donate = async () => {
-		// set user donateState
-		if (!walletState.userAddress) {
-			await connectWallet();
-			setDonateState(true);
-		} else {
-			setDonateState(true);
+		if (!account) {
+			activate(connectors.Injected, err => console.log(err))
 		}
 	};
 
@@ -120,9 +105,46 @@ export default function Home() {
 		const overrides = {
 			value: ethers.utils.parseEther(amountInEth.toString())
 		}
-		const tx = await sftContract.donate(walletState.userAddress, selectedPool, overrides)
-		console.log(tx,'tx');
+
+
+		try {
+
+			setTxState({
+				txHash: undefined,
+				txError: undefined,
+				txSuccess: undefined,
+			});
+
+
+			// sent transaction to network
+			const tx = await sftContract.donate(account, selectedPool, overrides)
+
+			setTxState({ txHash: tx.hash })
+			console.log(tx, 'tx')
+
+
+			// wait for the transaction to be mined
+			const receipt = await tx.wait();
+
+			// simulate a bit of delay for localnetwork
+			setTimeout(() => {
+				if (receipt.status === 1) {
+					setTxState({
+						txSuccess: true,
+					});
+				}
+			}, 2000)
+
+
+			console.log(receipt, 'receipt');
+
+		} catch (error) {
+
+			console.log(error, 'tx error')
+
+		}
 	}
+
 
 
 
@@ -135,16 +157,14 @@ export default function Home() {
 			</Head>
 			<div className='w-screen mx-auto'>
 				<section className='relative mx-auto bg-dark-water bg-fixed bg-cover w-screen'>
-					{walletState.userAddress ? (
+					{account ? (
 						<ConnectWallet
-							connect={() => {
-								setDonateState(true);
-							}}
+							connect={() => checkoutScreen()}
 							label='Mint Tokens'
 						/>
 					) : (
 						<ConnectWallet
-							connect={connectWallet}
+								onClick={activate(connectors.Injected, err => console.log(err))}
 							label='Connect Wallet'
 						/>
 					)}
@@ -185,21 +205,44 @@ export default function Home() {
 
 						<button
 							className='bg-gray-900 text-white hover:bg-gray-700 py-2 px-4 rounded my-5'
-							onClick={donate}>
-							{walletState.userAddress ? (
+							onClick={checkoutScreen}>
+							{account ? (
 								<h2>Mint Tokens</h2>
 							) : (
 								<h2>Connect wallet to donate</h2>
 							)}
 						</button>
-						{donateState && (
-							<DonateWindow
-								mintSFT={mintSFT}
+						{startCheckout && <DonateWindow
+							mintSFT={mintSFT}
 								close={() => {
-									setDonateState(false);
+								setStartCheckout(false);
+							}}
+						/>}
+
+						{txState.txHash && <TxMessage
+							msg={txState.txHash}
+							close={() => { }}
+						/>}
+
+						{txState.txError &&
+							<TxMessage
+								msg={txError}
+								close={() => {
+									setStartCheckout(false);
+									setTxState({ txError: undefined })
+
+								}}
+							/>}
+
+						{txState.txSuccess && <TxMessage
+							msg="Transaction Success"
+							close={() => {
+								setStartCheckout(false);
+								setTxState({ txSuccess: undefined })
 								}}
 							/>
-						)}
+						}
+
 					</div>
 
 					<div
@@ -241,7 +284,7 @@ export default function Home() {
 					</div>
 				</section>
 			</div>
-			<footer className='flex flex-row justify-between my-2'>
+			<footer className='flex flex-row justify-between my-2 mx-2'>
 				<a>@ 2021 science fund dao</a>
 				<a href='#'>white paper</a>
 			</footer>

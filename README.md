@@ -40,9 +40,26 @@ npx hardhat deploy
 ```
 
 ### Running test
-more tests are needed
+`//TODO:`more tests are needed
 
 ```shell
 npx hardhat test
 ```
 
+
+## **Interacting with the contract from browser on local hardhat nextwork** 
+
+
+- **Local Faucet**
+
+
+    You can deploy with your own account and get some ETH in the hardhat network by setting your account private key in .env .
+
+
+- **Network** 
+
+    As of the time of writing, there is some [metamask issue](https://github.com/MetaMask/metamask-extension/issues/10290) on localnetwork. One can resolve it by adding custom RPC in your metamask browser extension with chainID 31337 default in hardhat network.
+
+- **Network** 
+
+    Update the contract address in `index.js` after deployment.

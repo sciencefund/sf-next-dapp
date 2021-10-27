@@ -28,7 +28,7 @@ export default function DonateWindow(props) {
 							Funding pool
 						</span>
 						<select onChange={userChangePool} value={selectedPool} className='block w-full mt-1 pl-5 py-1 rounded-xl bg-gray-100'>
-							<option selected>Science Fund General Pool</option>
+							<option value>Science Fund General Pool</option>
 							<option>Neuroscience</option>
 							<option>Infectious Diseases</option>
 						</select>
@@ -54,6 +54,9 @@ export default function DonateWindow(props) {
 					</button>
 				</div>
 			</div>
+
+
+
 		</div>
 	);
 }
