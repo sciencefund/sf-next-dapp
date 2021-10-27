@@ -14,7 +14,7 @@ import TopicCard from "../components/topicCard";
 import BigButton from "../components/bigButton";
 import ConnectWallet from "../components/connectWallet";
 import DonateWindow from "../components/donateWindow";
-
+import TxMessage from "../components/txMessage";
 
 // contract address on localhost:8545
 //0x10C25d5032e0d1C7551BAf2F693CbF67fC4A85E2
@@ -44,16 +44,22 @@ export default function Home() {
 		balance: undefined,
 	});
 
-	const [donateState, setDonateState] = useState(undefined);
+	const [startCheckout, setStartCheckout] = useState(false);
+	const [txState, setTxState] = useState({
+		txHash: undefined,
+		txError: undefined,
+		txSuccess: undefined,
+	})
+
 
 	useEffect(() => {
 		if (!sftContract) {
-		readContract()
+			loadContract()
 		}
 	});
 
 	// read contract
-	const readContract = async () => {
+	const loadContract = async () => {
 		console.log(typeof window.ethereum)
 		if (typeof window.ethereum !== 'undefined') {
 			const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -77,8 +83,6 @@ export default function Home() {
 
 
 	const connectWallet = async () => {
-
-
 		const isMetamask = await detectEthereumProvider();
 		if (isMetamask) {
 			const [selectedAddress] = await ethereum.request({
@@ -100,13 +104,13 @@ export default function Home() {
 	};
 
 
-	const donate = async () => {
-		// set user donateState
+	const checkoutScreen = async () => {
+		//start checkout screen
 		if (!walletState.userAddress) {
 			await connectWallet();
-			setDonateState(true);
+			setStartCheckout(true);
 		} else {
-			setDonateState(true);
+			setStartCheckout(true);
 		}
 	};
 
@@ -115,9 +119,50 @@ export default function Home() {
 		const overrides = {
 			value: ethers.utils.parseEther(amountInEth.toString())
 		}
-		const tx = await sftContract.donate(walletState.userAddress, selectedPool, overrides)
-		console.log(tx,'tx');
+
+
+		try {
+
+
+			setTxState({
+				txHash: undefined,
+				txError: undefined,
+				txSuccess: undefined,
+			});
+
+
+			// sent transaction to network
+			const tx = await sftContract.donate(walletState.userAddress, selectedPool, overrides)
+
+			setTxState({ txHash: tx.hash })
+			console.log(tx, 'tx')
+
+
+			// wait for the transaction to be mined
+			const receipt = await tx.wait();
+			// simulate a bit of delay for localnetwork
+			setTimeout(() => {
+				if (receipt.status === 1) {
+					setTxState({
+						txSuccess: true,
+					});
+				}
+			}, 2000)
+
+
+			console.log(receipt, 'receipt');
+
+		} catch (error) {
+
+			console.log(error, 'tx error')
+
+		} finally {
+
+			//clear tx states and checkout screen
+
+		}
 	}
+
 
 
 
@@ -133,7 +178,7 @@ export default function Home() {
 					{walletState.userAddress ? (
 						<ConnectWallet
 							connect={() => {
-								setDonateState(true);
+								checkoutScreen(true);
 							}}
 							label='Mint Tokens'
 						/>
@@ -180,21 +225,44 @@ export default function Home() {
 
 						<button
 							className='bg-gray-900 text-white hover:bg-gray-700 py-2 px-4 rounded my-5'
-							onClick={donate}>
+							onClick={checkoutScreen}>
 							{walletState.userAddress ? (
 								<h2>Mint Tokens</h2>
 							) : (
 								<h2>Connect wallet to donate</h2>
 							)}
 						</button>
-						{donateState && (
-							<DonateWindow
-								mintSFT={mintSFT}
+						{startCheckout && <DonateWindow
+							mintSFT={mintSFT}
 								close={() => {
-									setDonateState(false);
+								setStartCheckout(false);
+							}}
+						/>}
+
+						{txState.txHash && <TxMessage
+							msg={txState.txHash}
+							close={() => { }}
+						/>}
+
+						{txState.txError &&
+							<TxMessage
+								msg={txError}
+								close={() => {
+									setStartCheckout(false);
+									setTxState({ txError: undefined })
+
+								}}
+							/>}
+
+						{txState.txSuccess && <TxMessage
+							msg="Transaction Success"
+							close={() => {
+								setStartCheckout(false);
+								setTxState({ txSuccess: undefined })
 								}}
 							/>
-						)}
+						}
+
 					</div>
 
 					<div
@@ -236,7 +304,7 @@ export default function Home() {
 					</div>
 				</section>
 			</div>
-			<footer className='flex flex-row justify-between my-2'>
+			<footer className='flex flex-row justify-between my-2 mx-2'>
 				<a>@ 2021 science fund dao</a>
 				<a href='#'>white paper</a>
 			</footer>

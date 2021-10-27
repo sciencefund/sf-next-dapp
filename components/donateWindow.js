@@ -54,6 +54,9 @@ export default function DonateWindow(props) {
 					</button>
 				</div>
 			</div>
+
+
+
 		</div>
 	);
 }
