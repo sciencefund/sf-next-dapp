@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 
 import Head from "next/head";
 
-import detectEthereumProvider from "@metamask/detect-provider";
 
 import { useWeb3React } from "@web3-react/core";
 import { connectors } from "../context/connectors";
@@ -35,14 +34,11 @@ export default function Home() {
 	const context = useWeb3React();
 	const { library, account, activate } = context;
 
+	console.log('account', account);
+
 	const [sftContract, setSftContract] = useState(null);
 	const [localProvider, setLocalProvider] = useState(null);
 
-	const [walletState, setWalletState] = useState({
-		userAddress: undefined,
-		selectedNetwork: undefined,
-		balance: undefined,
-	});
 
 	const [startCheckout, setStartCheckout] = useState(false);
 	const [txState, setTxState] = useState({
@@ -60,57 +56,47 @@ export default function Home() {
 
 	// read contract
 	const loadContract = async () => {
-		console.log(typeof window.ethereum)
+
 		if (typeof window.ethereum !== 'undefined') {
+
+			// load the network provider 
 			const provider = new ethers.providers.Web3Provider(window.ethereum)
 			setLocalProvider(provider);
-			const signer = provider.getSigner()
+
+
+
+			// connet to contract on the network
 			const contract = new ethers.Contract(contractAddress, ScienceFund.abi, provider);
+			const signer = provider.getSigner(0)
 			const connectedContract = await contract.connect(signer)
 			setSftContract(connectedContract);
-			console.log(contract,'contract');
+
+
 			try {
-				console.log(await signer.getBalance())
-				console.log(await contract.deployed())
+				//how to know the contract is there?
+				console.log(await provider.getBalance(account), 'get user balance')
+				console.log(await provider.getCode(contractAddress), 'contract code ')
 
 			} catch (err) {
-				console.log("Read Contract Error:", err)
+				console.log("LOAD Contract Error:", err)
 			}
 
+		} else {
+			console.log("install metamask")
 		}
 
 	}
 
 
-	const connectWallet = async () => {
-		const isMetamask = await detectEthereumProvider();
-		if (isMetamask) {
-			const [selectedAddress] = await ethereum.request({
-				method: "eth_requestAccounts",
-			});
-			console.log(`connected to ${selectedAddress}`);
 
-			const chainId = await ethereum.request({ method: "eth_chainId" });
-			console.log(`selected network to ${chainId}`);
-
-			setWalletState({
-				userAddress: selectedAddress,
-				selectedNetwork: chainId,
-			});
-		} else {
-			//trigger a pop up window to link to metamask installation
-			console.log("install metamask");
-		}
-	};
 
 
 	const checkoutScreen = async () => {
 		//start checkout screen
-		if (!walletState.userAddress) {
-			await connectWallet();
-			setStartCheckout(true);
-		} else {
-			setStartCheckout(true);
+		setStartCheckout(true);
+
+		if (!account) {
+			activate(connectors.Injected, err => console.log(err))
 		}
 	};
 
@@ -123,7 +109,6 @@ export default function Home() {
 
 		try {
 
-
 			setTxState({
 				txHash: undefined,
 				txError: undefined,
@@ -132,7 +117,7 @@ export default function Home() {
 
 
 			// sent transaction to network
-			const tx = await sftContract.donate(walletState.userAddress, selectedPool, overrides)
+			const tx = await sftContract.donate(account, selectedPool, overrides)
 
 			setTxState({ txHash: tx.hash })
 			console.log(tx, 'tx')
@@ -140,6 +125,7 @@ export default function Home() {
 
 			// wait for the transaction to be mined
 			const receipt = await tx.wait();
+
 			// simulate a bit of delay for localnetwork
 			setTimeout(() => {
 				if (receipt.status === 1) {
@@ -156,10 +142,6 @@ export default function Home() {
 
 			console.log(error, 'tx error')
 
-		} finally {
-
-			//clear tx states and checkout screen
-
 		}
 	}
 
@@ -175,16 +157,14 @@ export default function Home() {
 			</Head>
 			<div className='w-screen mx-auto'>
 				<section className='relative mx-auto bg-dark-water bg-fixed bg-cover w-screen'>
-					{walletState.userAddress ? (
+					{account ? (
 						<ConnectWallet
-							connect={() => {
-								checkoutScreen(true);
-							}}
+							connect={() => checkoutScreen()}
 							label='Mint Tokens'
 						/>
 					) : (
 						<ConnectWallet
-							connect={connectWallet}
+								onClick={activate(connectors.Injected, err => console.log(err))}
 							label='Connect Wallet'
 						/>
 					)}
@@ -226,7 +206,7 @@ export default function Home() {
 						<button
 							className='bg-gray-900 text-white hover:bg-gray-700 py-2 px-4 rounded my-5'
 							onClick={checkoutScreen}>
-							{walletState.userAddress ? (
+							{account ? (
 								<h2>Mint Tokens</h2>
 							) : (
 								<h2>Connect wallet to donate</h2>
