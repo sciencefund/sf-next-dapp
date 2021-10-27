@@ -6,6 +6,7 @@ import Head from "next/head";
 import { useWeb3React } from "@web3-react/core";
 import { connectors } from "../context/connectors";
 import { ethers } from "ethers"
+import { BigNumber } from "@ethersproject/bignumber";
 
 import ScienceFund from "../artifacts/contracts/ScienceFund.sol/ScienceFund.json";
 
@@ -15,9 +16,13 @@ import ConnectWallet from "../components/connectWallet";
 import DonateWindow from "../components/donateWindow";
 import TxMessage from "../components/txMessage";
 
-// contract address on localhost:8545
-//0x10C25d5032e0d1C7551BAf2F693CbF67fC4A85E2
-const contractAddress = "0x10C25d5032e0d1C7551BAf2F693CbF67fC4A85E2"
+
+
+// contract address on localhost:8545, maybe different for each deployment
+const contractAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+
+
+
 const NETWORKS = {
 	localhost: {
     name: "localhost",
@@ -34,7 +39,6 @@ export default function Home() {
 	const context = useWeb3React();
 	const { library, account, activate } = context;
 
-	console.log('account', account);
 
 	const [sftContract, setSftContract] = useState(null);
 	const [localProvider, setLocalProvider] = useState(null);
@@ -54,7 +58,7 @@ export default function Home() {
 		}
 	});
 
-	// read contract
+	// load contract
 	const loadContract = async () => {
 
 		if (typeof window.ethereum !== 'undefined') {
@@ -73,8 +77,13 @@ export default function Home() {
 
 
 			try {
-				//how to know the contract is there?
-				console.log(await provider.getBalance(account), 'get user balance')
+
+				const contractBalance = await provider.getBalance(contractAddress)
+				const contractBalanceETH = ethers.utils.formatEther(BigNumber.from(contractBalance._hex).toString())
+
+				console.log(`${contractBalanceETH}ETH`, 'contractBalance in ether')
+
+				//contract is not there
 				console.log(await provider.getCode(contractAddress), 'contract code ')
 
 			} catch (err) {
@@ -101,7 +110,6 @@ export default function Home() {
 	};
 
 	const mintSFT = async (amountInEth, selectedPool) => {
-		console.log('clicked')
 		const overrides = {
 			value: ethers.utils.parseEther(amountInEth.toString())
 		}
@@ -178,7 +186,7 @@ export default function Home() {
 						</h1>
 						<BigButton
 							label='Stay tuned'
-							href='https://docs.google.com/forms/d/e/1FAIpQLSf7upF5dRzrnZUDeW2NgEcyRkeaeFCDpDKFwMHMfTr6zPObLg/viewform'
+							href='/'
 						/>
 					</div>
 				</section>
@@ -200,8 +208,7 @@ export default function Home() {
 							deserunt mollit anim id est laborum
 						</p>
 
-						{/* <button className='bg-gray-900 text-white hover:bg-gray-700 py-2 px-4 rounded my-5'>
-							{account ? <h2>You are connected</h2> : <h2 onClick={() => activate(connectors.Injected, err => console.log(err))}>Connect wallet to donate</h2>} */}
+
 
 						<button
 							className='bg-gray-900 text-white hover:bg-gray-700 py-2 px-4 rounded my-5'
