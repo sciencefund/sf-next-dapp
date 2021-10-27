@@ -6,6 +6,7 @@ import Head from "next/head";
 import { useWeb3React } from "@web3-react/core";
 import { connectors } from "../context/connectors";
 import { ethers } from "ethers"
+import { BigNumber } from "@ethersproject/bignumber";
 
 import ScienceFund from "../artifacts/contracts/ScienceFund.sol/ScienceFund.json";
 
@@ -15,9 +16,12 @@ import ConnectWallet from "../components/connectWallet";
 import DonateWindow from "../components/donateWindow";
 import TxMessage from "../components/txMessage";
 
-// contract address on localhost:8545
-//0x10C25d5032e0d1C7551BAf2F693CbF67fC4A85E2
-const contractAddress = "0x10C25d5032e0d1C7551BAf2F693CbF67fC4A85E2"
+
+
+// contract address on localhost:8545, maybe different for each deployment
+const contractAddress = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+
+
 const NETWORKS = {
 	localhost: {
     name: "localhost",
@@ -34,7 +38,6 @@ export default function Home() {
 	const context = useWeb3React();
 	const { library, account, activate } = context;
 
-	console.log('account', account);
 
 	const [sftContract, setSftContract] = useState(null);
 	const [localProvider, setLocalProvider] = useState(null);
@@ -54,10 +57,11 @@ export default function Home() {
 		}
 	});
 
-	// read contract
+	// load contract
 	const loadContract = async () => {
 
 		if (typeof window.ethereum !== 'undefined') {
+
 
 			// load the network provider 
 			const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -67,15 +71,17 @@ export default function Home() {
 
 			// connet to contract on the network
 			const contract = new ethers.Contract(contractAddress, ScienceFund.abi, provider);
-			const signer = provider.getSigner(0)
-			const connectedContract = await contract.connect(signer)
+			const connectedContract = await contract.connect(provider.getSigner(0))
 			setSftContract(connectedContract);
 
 
 			try {
-				//how to know the contract is there?
-				console.log(await provider.getBalance(account), 'get user balance')
-				console.log(await provider.getCode(contractAddress), 'contract code ')
+
+				const contractBalance = await provider.getBalance(contractAddress)
+				const contractBalanceETH = ethers.utils.formatEther(BigNumber.from(contractBalance._hex).toString())
+
+				console.log(`${contractBalanceETH}ETH`, 'contractBalance in ether')
+
 
 			} catch (err) {
 				console.log("LOAD Contract Error:", err)
@@ -89,6 +95,22 @@ export default function Home() {
 
 
 
+	//load user tokens from contract 
+	const loadUserTokens = async () => {
+
+		const balanceHex = await sftContract.balanceOf(account)
+		console.log(BigNumber.from(balanceHex).toNumber(), 'balance')
+
+		console.log(await sftContract.ownerOf(1), 'ownerOf 1')
+		console.log(await sftContract.tokenFundingPools(1), 'funding pool')
+
+		const tokenValue = await sftContract.tokenValues(2)
+		console.log(ethers.utils.formatEther(BigNumber.from(tokenValue).toString()), 'token value in ETH')
+
+		//TODO: sftContract.tokenURI(1) throws errors
+
+	}
+
 
 
 	const checkoutScreen = async () => {
@@ -101,7 +123,8 @@ export default function Home() {
 	};
 
 	const mintSFT = async (amountInEth, selectedPool) => {
-		console.log('clicked')
+
+
 		const overrides = {
 			value: ethers.utils.parseEther(amountInEth.toString())
 		}
@@ -120,8 +143,6 @@ export default function Home() {
 			const tx = await sftContract.donate(account, selectedPool, overrides)
 
 			setTxState({ txHash: tx.hash })
-			console.log(tx, 'tx')
-
 
 			// wait for the transaction to be mined
 			const receipt = await tx.wait();
@@ -136,7 +157,7 @@ export default function Home() {
 			}, 2000)
 
 
-			console.log(receipt, 'receipt');
+			// console.log(receipt, 'receipt');
 
 		} catch (error) {
 
@@ -178,7 +199,7 @@ export default function Home() {
 						</h1>
 						<BigButton
 							label='Stay tuned'
-							href='https://docs.google.com/forms/d/e/1FAIpQLSf7upF5dRzrnZUDeW2NgEcyRkeaeFCDpDKFwMHMfTr6zPObLg/viewform'
+							href='/'
 						/>
 					</div>
 				</section>
@@ -200,8 +221,7 @@ export default function Home() {
 							deserunt mollit anim id est laborum
 						</p>
 
-						{/* <button className='bg-gray-900 text-white hover:bg-gray-700 py-2 px-4 rounded my-5'>
-							{account ? <h2>You are connected</h2> : <h2 onClick={() => activate(connectors.Injected, err => console.log(err))}>Connect wallet to donate</h2>} */}
+
 
 						<button
 							className='bg-gray-900 text-white hover:bg-gray-700 py-2 px-4 rounded my-5'
@@ -279,7 +299,7 @@ export default function Home() {
 						</p>
 
 						<button className='bg-gray-900 text-white hover:bg-gray-700 py-2 px-4 rounded my-5'>
-							<h2>Connect wallet to trace</h2>
+							<h2 onClick={loadUserTokens}>Connect wallet to trace</h2>
 						</button>
 					</div>
 				</section>

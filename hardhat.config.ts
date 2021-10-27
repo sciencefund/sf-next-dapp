@@ -5,6 +5,7 @@ import "@typechain/hardhat";
 
 import "./tasks/accounts";
 import "./tasks/deployment/deploy";
+import "./tasks/faucet";
 require("dotenv").config();
 
 
@@ -21,13 +22,12 @@ const config: HardhatUserConfig = {
     hardhat: {
       chainId: 31337,
       initialBaseFeePerGas: 0,
-      accounts: [{ privateKey: `0x${process.env.PRIVATE_KEY}`, balance: '10000000000000000000000000' }]
-      // tests won't run because these is no other signer accounts :: how to add in more accounts to run tests
+      // accounts: [{ privateKey: `0x${process.env.PRIVATE_KEY}`, balance: '10000000000000000000000000' }]
     },
+
     // localhost: {
     //   url: 'http://localhost:8545',
     //   chainId: 31337,
-    //   accounts: [`0x${process.env.PRIVATE_KEY}`]
     // },
   }
 };

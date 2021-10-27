@@ -36,7 +36,7 @@ npx hardhat help
 npx hardhat clean
 TS_NODE_TRANSPILE_ONLY=1 npx hardhat compile
 npx hardhat node
-npx hardhat deploy
+npx hardhat deploy --network localhost
 ```
 
 ### Running test
@@ -52,8 +52,11 @@ npx hardhat test
 
 - **Local Faucet**
 
+    Tap into local faucet to receive 999 ETH by updating your address in `receiver` in `tasks/faucet.ts` and run
 
-    You can deploy with your own account and get some ETH in the hardhat network by setting your account private key in .env .
+    ```shell
+    npx hardhat faucet --network localhost
+    ```
 
 
 - **Network** 
