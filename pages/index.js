@@ -19,7 +19,7 @@ import TxMessage from "../components/txMessage";
 
 
 // contract address on localhost:8545, maybe different for each deployment
-const contractAddress = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
 
 
 const NETWORKS = {
@@ -185,7 +185,7 @@ export default function Home() {
 						/>
 					) : (
 						<ConnectWallet
-								onClick={activate(connectors.Injected, err => console.log(err))}
+								onClick={() => activate(connectors.Injected, err => console.log(err))}
 							label='Connect Wallet'
 						/>
 					)}
