@@ -1,73 +1,107 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
-
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 
-contract ScienceFund is ERC721 {
+contract ScienceFund is 
+    ERC721URIStorage, 
+    Ownable {
 
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
     constructor() ERC721("ScienceFund", "SFT"){}
 
-    // Mapping from token ID to funding poolId
-    mapping(uint256 => string) public tokenFundingPools;
 
-    // Mapping from token ID to donated value
-    mapping(uint256 => uint256) public tokenValues;
+    event SFTokenAllocated(uint id, uint value, string pool);
+    event SFTokenComplete(uint id, uint value, string pool);
 
 
-    // TODO: donate event
+    // Enums representing the life cycle of each token
+    enum AllocationStage { AwaitAllocation, Allocated, Complete}  
 
-    //@notice: the main donate function 
-    function donate(address donor, string memory selectedPool) public payable {
+    struct SFtoken {
+        uint id;
+        uint value;
+        string pool;
+        AllocationStage stage;  
+    }
+
+    SFtoken[] public sfTokens;
+
+
+
+    ///@notice donate function to mint a sftoken receipt
+
+    function donate(address _donor, string memory _selectedPool) public payable {
         
-        //generate a new tokenID
+        require(msg.value > 1, "ScienceFund: minimum value of 0.3ETH is required");
+
+
+        /// generate a new tokenID
         _tokenIds.increment();
         uint256 newTokenID = _tokenIds.current();
 
 
-        //setting an arbitrary supply limit for now
-        require(newTokenID > 0 && newTokenID < 9999, "Exceeds token maximum supply");
-        _safeMint(donor, newTokenID);
+        // mint 
+        _safeMint(_donor, newTokenID);
+        sfTokens.push(SFtoken(newTokenID, msg.value, _selectedPool,  AllocationStage.AwaitAllocation));
 
-        //record selected funding pools
-        tokenFundingPools[newTokenID] = selectedPool;
+    }
+ 
 
-        
-        //record donated value in eth
-        tokenValues[newTokenID] = msg.value;
 
-        //TODO: emit a donate event
+    function _updateTokenURI(uint _tokenId, string memory _newTokenURI) internal {
+       
+       /// @notice internal function to make sure TokenURI can only be updated when the stage cycle is not complete, thus disabling any change to URI and set it to permanent.
+
+        SFtoken memory token = sfTokens[_tokenId];
+        require( token.stage != AllocationStage.Complete,  "ScienceFund: the token life cycle must not be complete.");
+
+        _setTokenURI(_tokenId, _newTokenURI);
+
 
     }
 
-    //set tokenURI to record the funding pool and the amount donated
-    // @dev: somthing is wrong here
-    function tokenURI(uint256 tokenId) override public view returns(string memory){
 
-        require(tokenId > 0 && tokenId <= _tokenIds.current(), "Not a valid token");
+    /// @notice call allocate() after the token has been allocated to update tokenURI as well as allocation stage
 
-        string[5] memory parts;
-
-        parts[0] = '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350"><rect fill="black" /><text x="10" y="20">';
+    function allocate(uint _tokenId, string memory _newTokenURI) public onlyOwner { 
+        SFtoken memory token = sfTokens[_tokenId];
+        require( token.stage == AllocationStage.AwaitAllocation,  "ScienceFund: the token need not been allocated yet");
         
-        parts[1] = tokenFundingPools[tokenId];
 
-        parts[2] = '</text><text x="10" y="40">';
+        //update token URI
+        _updateTokenURI(_tokenId, _newTokenURI);
 
-        parts[3] = string(abi.encodePacked(tokenValues[tokenId], " ", "ETH"));
+        //update token stage
+        token.stage = AllocationStage.Allocated;
 
-        parts[4] = '</text></svg>';
 
-        string memory output = string(abi.encodePacked(parts[0], parts[1], parts[2], parts[3], parts[4]));
-        
-        return output;
+        /// @notice Emit Event TokenAllocated()
+        emit SFTokenAllocated(token.id, token.value, token.pool);
+
     }
 
+    /// @notice call complete() to update final tokenURI makes it permanent
 
+    function complete(uint _tokenId, string memory _newTokenURI) external onlyOwner{
+        SFtoken memory token = sfTokens[_tokenId];
+        require(token.stage == AllocationStage.Allocated,  "ScienceFund: the token must have been allocated already");
+
+        //update token stage
+        token.stage = AllocationStage.Complete;
+
+        //update token URI
+         _updateTokenURI(_tokenId, _newTokenURI);        
+
+        /// @notice Emit Event TokenCompleted()
+        emit SFTokenComplete(token.id, token.value, token.pool);
+
+    }
 
 }

@@ -6,6 +6,8 @@ import "@typechain/hardhat";
 import "./tasks/accounts";
 import "./tasks/deployment/deploy";
 import "./tasks/faucet";
+import "./tasks/allocation/allocate";
+
 require("dotenv").config();
 
 

@@ -73,3 +73,8 @@ npx hardhat test
 
 #### metadata standard 
 [EIP-1155] (https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1155.md#erc-1155-metadata-uri-json-schema)
+
+
+#### deploy metadata file on arweave 
+
+follow the instructions [here](https://docs.arweave.org/developers/tools/textury-arkb)

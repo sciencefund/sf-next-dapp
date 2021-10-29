@@ -1,13 +1,15 @@
+
 import { task } from "hardhat/config";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 import { TASK_FAUCET } from "./task-names";
+require("dotenv").config();
 
 
 task(TASK_FAUCET, "Send ETH to an address")
 .setAction( async (args, hre) => {
     let deployer: SignerWithAddress;
 
-    const receiver = "your wallet address";
+    const receiver = process.env.LOCAL_USER_WALLET;
     
     const network = await hre.ethers.provider.getNetwork();
     console.log(`network: ${network.name}`);

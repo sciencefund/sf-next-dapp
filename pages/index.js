@@ -19,9 +19,10 @@ import TxMessage from "../components/txMessage";
 
 
 // contract address on localhost:8545, maybe different for each deployment
-const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
-
+// const contractAddress = process.env.LOCALHOST_CONTRACT_ADDRESS;
+const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 console.log(contractAddress);
+
 
 const NETWORKS = {
 	localhost: {
@@ -96,21 +97,6 @@ export default function Home() {
 
 
 
-	//load user tokens from contract 
-	const loadUserTokens = async () => {
-
-		const balanceHex = await sftContract.balanceOf(account)
-		console.log(BigNumber.from(balanceHex).toNumber(), 'balance')
-
-		console.log(await sftContract.ownerOf(1), 'ownerOf 1')
-		console.log(await sftContract.tokenFundingPools(1), 'funding pool')
-
-		const tokenValue = await sftContract.tokenValues(2)
-		console.log(ethers.utils.formatEther(BigNumber.from(tokenValue).toString()), 'token value in ETH')
-
-		//TODO: sftContract.tokenURI(1) throws errors
-
-	}
 
 
 
@@ -167,6 +153,35 @@ export default function Home() {
 		}
 	}
 
+	//load user tokens from contract 
+	const loadUserTokens = async () => {
+		if (!account) {
+			activate(connectors.Injected, err => console.log(err))
+
+		}
+
+
+		if (account) {
+			const balanceHex = await sftContract.balanceOf(account)
+			console.log(BigNumber.from(balanceHex).toNumber(), 'balance')
+
+			// console.log(await sftContract.ownerOf(1), 'ownerOf 1')
+			const token1 = await sftContract.sfTokens(1);
+			console.log(token1.id, 'sfTokens  id')
+			console.log(token1.value, 'sfTokens  value')
+			console.log(token1.pool, 'sfTokens  pool')
+			console.log(token1.stage, 'sfTokens  stage')
+
+			//call tokenURI
+
+			const tokenURI = await sftContract.tokenURI(1)
+			console.log(tokenURI, 'tokenURI')
+
+		}
+
+
+		// console.log(ethers.utils.formatEther(BigNumber.from(tokenValue).toString()), 'token value in ETH')
+	}
 
 
 
@@ -186,7 +201,7 @@ export default function Home() {
 						/>
 					) : (
 						<ConnectWallet
-							onClick={() => activate(connectors.Injected, err => console.log(err))}
+								connect={() => activate(connectors.Injected, err => console.log(err))}
 							label='Connect Wallet'
 						/>
 					)}
