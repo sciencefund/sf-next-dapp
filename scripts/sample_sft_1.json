@@ -1,18 +1,18 @@
 
 {
 	"name": "Science Fund Token Sample 1",
-	"description": "brings the world to its knees",
-	"image": "http://localhost:3000/images/topics/virus.jpg",
+	"description": "Complexity simplified, through random matrix theory",
+	"image": "https://www.jesperripsen.com/profile.jpg",
 	"properties": {
 		"initial_property":  {
-			"donation_date": "12-OCT-2021", 
-			"donation_value": "1.2",
-			"donation_pool": "Infectious Disease"
+			"donation_date": "29-OCT-2021", 
+			"donation_value": "1.2ETH",
+			"donation_pool": "Science Fund General Pool"
 			},
 		"allocation_property": {
-			"recipient": "Alice",
-			"recepient_url":"http://localhost:3000/images/team/1.jpg",
-			"project_url":"",
+			"recipient": "Jesper",
+			"recepient_url":"https://www.jesperripsen.com/",
+			"project_url":"https://arxiv.org/abs/2008.04622",
 			"grant_start_date": "01-Jan-2022",
 			"grant_end_date": "31-Nov-2023",
 			"project_impact_url":""
