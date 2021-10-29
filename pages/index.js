@@ -19,20 +19,19 @@ import TxMessage from "../components/txMessage";
 
 
 // contract address on localhost:8545, maybe different for each deployment
-// const contractAddress = process.env.LOCAL_CONTRACT_ADDRESS
 const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
 
 console.log(contractAddress);
 
 const NETWORKS = {
 	localhost: {
-    name: "localhost",
-    color: "#666666",
+		name: "localhost",
+		color: "#666666",
 		chainId: 31337,
-    blockExplorer: "",
-    rpcUrl: "http://" + 'localhost' + ":8545",
-  }
+		blockExplorer: "",
+		rpcUrl: "http://" + 'localhost' + ":8545",
 	}
+}
 
 
 
@@ -187,7 +186,7 @@ export default function Home() {
 						/>
 					) : (
 						<ConnectWallet
-								onClick={activate(connectors.Injected, err => console.log(err))}
+							onClick={() => activate(connectors.Injected, err => console.log(err))}
 							label='Connect Wallet'
 						/>
 					)}
@@ -236,7 +235,7 @@ export default function Home() {
 						</button>
 						{startCheckout && <DonateWindow
 							mintSFT={mintSFT}
-								close={() => {
+							close={() => {
 								setStartCheckout(false);
 							}}
 						/>}
@@ -261,8 +260,8 @@ export default function Home() {
 							close={() => {
 								setStartCheckout(false);
 								setTxState({ txSuccess: undefined })
-								}}
-							/>
+							}}
+						/>
 						}
 
 					</div>

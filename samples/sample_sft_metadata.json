@@ -1,8 +1,8 @@
 
 {
 	"name": "Science Fund Token Sample 1",
-	"description": "Complexity simplified, through random matrix theory",
-	"image": "https://www.jesperripsen.com/profile.jpg",
+	"description": "the virus that brings the world to its knees",
+	"image": "ar://",
 	"properties": {
 		"initial_property":  {
 			"donation_date": "29-OCT-2021", 
@@ -10,9 +10,9 @@
 			"donation_pool": "Science Fund General Pool"
 			},
 		"allocation_property": {
-			"recipient": "Jesper",
-			"recepient_url":"https://www.jesperripsen.com/",
-			"project_url":"https://arxiv.org/abs/2008.04622",
+			"recipient": "Alice",
+			"recepient_url":"ar://",
+			"project_url":"ar://",
 			"grant_start_date": "01-Jan-2022",
 			"grant_end_date": "31-Nov-2023",
 			"project_impact_url":""
