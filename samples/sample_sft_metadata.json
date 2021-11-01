@@ -1,0 +1,26 @@
+
+{
+	"name": "Science Fund Token Sample 1",
+	"description": "the virus that brings the world to its knees",
+	"image": "ar://",
+	"properties": {
+		"initial_property":  {
+			"donation_date": "29-OCT-2021", 
+			"donation_value": "1.2ETH",
+			"donation_pool": "Science Fund General Pool"
+			},
+		"allocation_property": {
+			"recipient": "Alice",
+			"recepient_url":"ar://",
+			"project_url":"ar://",
+			"grant_start_date": "01-Jan-2022",
+			"grant_end_date": "31-Nov-2023",
+			"project_impact_url":""
+		},
+		"internal_property": {
+			"donation_source": "unknown",
+			"parent_tokeIDs": []
+		}
+	}
+}
+

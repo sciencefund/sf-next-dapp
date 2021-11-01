@@ -22,7 +22,7 @@ Open http://localhost:3000 with your browser to see the result.
 
 You can start editing the homepage page by modifying <code>pages/index.js</code>. The page auto-updates as you edit the file.
 
-# HardHard Backend
+# HardHat Backend
 
 This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
 
@@ -63,6 +63,18 @@ npx hardhat test
 
     As of the time of writing, there is some [metamask issue](https://github.com/MetaMask/metamask-extension/issues/10290) on localnetwork. One can resolve it by adding custom RPC in your metamask browser extension with chainID 31337 default in hardhat network.
 
-- **Network** 
+- **Contract address** 
 
-    Update the contract address in `index.js` after deployment.
+    Update the contract address in `.env` after deployment.
+
+
+# NFT metadata 
+
+
+#### metadata standard 
+[EIP-1155] (https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1155.md#erc-1155-metadata-uri-json-schema)
+
+
+#### deploy metadata file on arweave 
+
+follow the instructions [here](https://docs.arweave.org/developers/tools/textury-arkb)
