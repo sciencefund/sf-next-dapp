@@ -14,15 +14,21 @@ export default function DonateWindow(props) {
 	}
 
 	return (
+		// background modal screen
 		<div className='fixed top-0 left-0 bg-opacity-30 bg-black h-screen w-full '>
 
-
+			{/* foreground modal screen */}
 			<div className='relative  w-3/4 h-auto border-4 border-white mx-auto mt-24 p-2 bg-white rounded shadow-2xl'>
+
+				{/* close button */}
 				<button
 					className='absolute top-0 right-0 w-8 h-8 bg-gray-900 text-white border-2 rounded-full shadow-2xl text-xl hover:bg-gray-700'
 					onClick={props.close}>
 					&times;
 				</button>
+
+
+				{/* page 1 checkout info */}
 				<div className='my-10 max-w-lg mx-auto text-center w-1/2'>
 
 
@@ -58,7 +64,7 @@ export default function DonateWindow(props) {
 					<hr className="my-11 w-full mx-auto" />
 
 
-					<label className='block my-4 w-4/5 mx-auto'>
+					<label className='block my-4  mx-auto'>
 						<div className='block my-2 text-gray-700 text-lg font-semibold'>
 							Donation Amount</div>
 						<input
@@ -69,8 +75,8 @@ export default function DonateWindow(props) {
 							placeholder='1'
 							onChange={userDonate}
 						/>
-						<span className="text-gray-700 ml-2 text-xl">ETH</span>
-						<span className='text-gray-700 text-xs font-light ml-5'>
+						<span className="text-gray-700 mx-2 text-xl">ETH</span>
+						<span className='text-gray-700 text-xs font-light'>
 							= {Math.round(exRate * value * 100) / 100} USD
 						</span>
 					</label>
@@ -86,9 +92,10 @@ export default function DonateWindow(props) {
 						<h2 onClick={() => mintSFT(value, selectedPool)}>Mint</h2>
 					</button>
 				</div>
+
+
+
 			</div>
-
-
 
 		</div>
 	);

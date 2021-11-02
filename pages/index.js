@@ -14,7 +14,8 @@ import TopicCard from "../components/topicCard";
 import BigButton from "../components/bigButton";
 import ConnectWallet from "../components/connectWallet";
 import DonateWindow from "../components/donateWindow";
-import TxMessage from "../components/txMessage";
+import TxMessage from "../components/ThankYouMessage";
+import ThankYouMessage from "../components/ThankYouMessage";
 
 
 
@@ -49,7 +50,7 @@ export default function Home() {
 	const [txState, setTxState] = useState({
 		txHash: undefined,
 		txError: undefined,
-		txSuccess: undefined,
+		txSuccess: true,
 	})
 
 
@@ -214,7 +215,7 @@ export default function Home() {
 							science fund
 						</h1>
 						<BigButton
-							label='Stay tuned'
+							label='Donate'
 							href='/'
 						/>
 					</div>
@@ -270,8 +271,7 @@ export default function Home() {
 								}}
 							/>}
 
-						{txState.txSuccess && <TxMessage
-							msg="Transaction Success"
+						{txState.txSuccess && <ThankYouMessage
 							close={() => {
 								setStartCheckout(false);
 								setTxState({ txSuccess: undefined })
