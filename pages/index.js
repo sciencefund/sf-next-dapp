@@ -15,6 +15,10 @@ import BigButton from "../components/bigButton";
 import ConnectWallet from "../components/connectWallet";
 import DonateWindow from "../components/donateWindow";
 import TxMessage from "../components/txMessage";
+import { ceramicCoreFactory, CERAMIC_TESTNET } from '../components/ceramic/ceramic';
+
+import { EthereumAuthProvider, SelfID, WebClient } from "@self.id/web";
+import modelAliases from "../components/ceramic/model.json";
 
 
 
@@ -41,6 +45,7 @@ export default function Home() {
 
 	const [sftContract, setSftContract] = useState(null);
 	const [localProvider, setLocalProvider] = useState(null);
+	const [self, setSelf] = useState(null);
 
 
 	const [startCheckout, setStartCheckout] = useState(false);
@@ -56,6 +61,13 @@ export default function Home() {
 			loadContract()
 		}
 	});
+
+	useEffect(() => {
+		console.log(account)
+		if (account) {
+			connectDID()
+		}
+	}, [account])
 
 	// load contract
 	const loadContract = async () => {
@@ -91,6 +103,47 @@ export default function Home() {
 			console.log("install metamask")
 		}
 
+	}
+
+	const core = ceramicCoreFactory();
+
+	const connectDID = async () => {
+		const myId = await SelfID.authenticate({
+      authProvider: new EthereumAuthProvider(window.ethereum, account),
+      ceramic: CERAMIC_TESTNET,
+      connectNetwork: CERAMIC_TESTNET,
+      // model: modelAliases,
+    });
+
+		alert('connected')
+		
+		setSelf(myId)
+	}
+
+	const createProfile = async (address = '0x16e9b2B8A2C92e98faBd8f9B08210f674F570059', chainId = 4) => {
+		const userDID = await core.getAccountDID(`${address}@eip155:${chainId}`);
+		console.log(userDID);
+
+		let basicProfile = await core.get('basicProfile', userDID);
+
+		console.log(basicProfile);
+
+		await self.client.dataStore.set('basicProfile', { name: 'jerry'});
+
+
+		basicProfile = await core.get('basicProfile', userDID);
+
+		console.log(basicProfile);
+
+	}
+
+	const appendPrivateDetailsToProfile = async () => {
+		const dataToStore = { privateData: 'This will be encrypted'};
+
+		self.client.ceramic.did?.createDagJWE(dataToStore, 
+		// list of DIDs that can access this)
+		[self.did]
+		);
 	}
 
 
@@ -194,6 +247,9 @@ export default function Home() {
 						<p className='text-grey-800 text-3xl italic mb-4 '>
 							Reimagining the path to discovery
 						</p>
+						<div>
+							<button onClick={() => createProfile()}>Get DID</button>
+						</div>
 						<h1 className='text-grey-900 text-6xl uppercase mb-6 font-bold tracking-wide'>
 							science fund
 						</h1>
