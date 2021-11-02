@@ -8,6 +8,7 @@ export default function DonateWindow(props) {
 	const exRate = 4146.55;
 	const userDonate = (event) => {
 		setValue(event.target.value);
+
 	};
 	const userChangePool = event => {
 		setSelectedPool(event.target.value);
@@ -29,7 +30,7 @@ export default function DonateWindow(props) {
 
 
 				{/* page 1 checkout info */}
-				<div className='my-10 max-w-lg mx-auto text-center w-1/2'>
+				<div className='my-10 max-w-lg mx-auto text-center w-3/5'>
 
 
 					<div>

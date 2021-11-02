@@ -12,6 +12,9 @@ module.exports = {
 			fontFamily: {
 				serif: ["KohSantepheap", "Georgia", "serif"],
 			},
+			fontSize: {
+				'2xs': '.65rem'
+			}
 		},
 	},
 	variants: {

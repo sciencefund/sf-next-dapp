@@ -3,6 +3,12 @@ import Image from "next/Image";
 export default function ThankYouMessage(props) {
 
 
+    console.log(props.hash, 'thank you message: props.hash')
+
+    console.log(props.amount, 'thank you message: props.amount')
+    console.log(props.pool, 'thank you message: props.pool')
+
+
 
     return (
         <div className='fixed top-0 left-0 bg-opacity-30 bg-black h-screen w-full '>
@@ -16,11 +22,10 @@ export default function ThankYouMessage(props) {
                 </button>
                 <div className='my-10 max-w-lg mx-auto text-center'>
 
-                    {/* <h2>{props.msg}</h2> */}
 
                     <div className="mb-10">
-                        <h1 className="text-blue-900 text-xl font-thin my-2">Thank You!</h1>
-                        <p className="text-xs mx-auto"> The transaction is successful. Link to transaction <a href="/" className="text-blue-900">receipt</a></p>
+                        <h1 className="text-blue-900 text-2xl font-thin my-2">Thank You!</h1>
+                        <p className="text-sm mx-auto"> The transaction is successful. Link to transaction <a href="/" className="text-blue-900">receipt</a></p>
                     </div>
 
                     {/* actual receipt */}
@@ -29,22 +34,22 @@ export default function ThankYouMessage(props) {
 
                         <div className="text-left text-white mx-8 w-auto mt-8 mb-48">
                             <div className="my-2">
-                                <p className="italic text-sm font-semibold">Hash</p>
-                                <p>{props.txhash}</p>
+                                <p className="text-sm font-thin">Transaction Hash</p>
+                                <span className="text-xs italic font-thin text-blue-300 break-all">{props.txhash}</span>
                             </div>
 
                             <div className="my-2">
-                                <p className="italic text-sm font-semibold">Date</p>
-                                <p>{props.date}</p>
+                                <p className="text-sm font-thin">Block Hash</p>
+                                <p className="text-blue-300 font-thin text-sm break-all">{props.blockhash}</p>
                             </div>
 
                             <div className="my-2">
-                                <p className="italic text-sm font-semibold">Funding pool</p>
-                                <p>{props.fundingPool}</p>
+                                <p className="text-sm font-thin">Funding pool</p>
+                                <p className="text-blue-300 font-thin text-sm">{props.pool}</p>
                             </div>
                             <div className="my-2">
-                                <p className="italic text-sm font-semibold">Amount</p>
-                                <p>{props.amount} ETH</p>
+                                <p className="text-sm font-thin">Amount</p>
+                                <p className="text-blue-300 font-thin text-sm">{props.amount} ETH</p>
                             </div>
 
 

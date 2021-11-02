@@ -46,11 +46,16 @@ export default function Home() {
 	const [localProvider, setLocalProvider] = useState(null);
 
 
-	const [startCheckout, setStartCheckout] = useState(true);
+	const [startCheckout, setStartCheckout] = useState(false);
+
+
 	const [txState, setTxState] = useState({
-		txHash: undefined,
+		txSent: undefined,
 		txError: undefined,
-		txSuccess: true,
+		txSuccessHash: undefined, //hash
+		txBlockHash: undefined,
+		txAmount: undefined,
+		txPool: undefined,
 	})
 
 
@@ -112,6 +117,11 @@ export default function Home() {
 
 	const mintSFT = async (amountInEth, selectedPool) => {
 
+		console.log(amountInEth, 'amountInEth');
+		console.log(selectedPool, 'selectedPool')
+
+
+
 
 		const overrides = {
 			value: ethers.utils.parseEther(amountInEth.toString())
@@ -120,36 +130,50 @@ export default function Home() {
 
 		try {
 
+
 			setTxState({
-				txHash: undefined,
+				txSent: undefined,
 				txError: undefined,
-				txSuccess: undefined,
+				txSuccessHash: undefined, //hash
 			});
+
 
 
 			// sent transaction to network
 			const tx = await sftContract.donate(account, selectedPool, overrides)
 
-			setTxState({ txHash: tx.hash })
+			setTxState({ txSent: true })
 
 			// wait for the transaction to be mined
 			const receipt = await tx.wait();
 
-			// simulate a bit of delay for localnetwork
+
+			console.log(receipt, "receipt");
+
+
+			// simulate a delay of 2s for localnetwork
 			setTimeout(() => {
 				if (receipt.status === 1) {
 					setTxState({
-						txSuccess: true,
+						txSuccessHash: receipt.transactionHash,
+						txBlockHash: receipt.blockHash,
+						txAmount: amountInEth,
+						txPool: selectedPool,
 					});
 				}
 			}, 2000)
 
 
-			// console.log(receipt, 'receipt');
+
+
 
 		} catch (error) {
 
 			console.log(error, 'tx error')
+			setTxState({ txError: error });
+
+		} finally {
+			//update transaction states
 
 		}
 	}
@@ -256,8 +280,8 @@ export default function Home() {
 							}}
 						/>}
 
-						{txState.txHash && <TxMessage
-							msg={txState.txHash}
+						{txState.txSent && <TxMessage
+							msg="Waiting for the transaction to be mined"
 							close={() => { }}
 						/>}
 
@@ -271,10 +295,14 @@ export default function Home() {
 								}}
 							/>}
 
-						{txState.txSuccess && <ThankYouMessage
+						{txState.txSuccessHash && <ThankYouMessage
+							txhash={txState.txSuccessHash}
+							blockhash={txState.txBlockHash}
+							pool={txState.txPool}
+							amount={txState.txAmount}
 							close={() => {
 								setStartCheckout(false);
-								setTxState({ txSuccess: undefined })
+								setTxState({ txSuccessHash: undefined })
 							}}
 						/>
 						}
