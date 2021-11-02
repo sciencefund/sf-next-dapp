@@ -14,13 +14,14 @@ import TopicCard from "../components/topicCard";
 import BigButton from "../components/bigButton";
 import ConnectWallet from "../components/connectWallet";
 import DonateWindow from "../components/donateWindow";
-import TxMessage from "../components/txMessage";
+import TxMessage from "../components/ThankYouMessage";
+import ThankYouMessage from "../components/ThankYouMessage";
 
 
 
 // contract address on localhost:8545, maybe different for each deployment
 // const contractAddress = process.env.LOCALHOST_CONTRACT_ADDRESS;
-const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 console.log(contractAddress);
 
 
@@ -46,10 +47,15 @@ export default function Home() {
 
 
 	const [startCheckout, setStartCheckout] = useState(false);
+
+
 	const [txState, setTxState] = useState({
-		txHash: undefined,
+		txSent: undefined,
 		txError: undefined,
-		txSuccess: undefined,
+		txSuccessHash: undefined, //hash
+		txBlockHash: undefined,
+		txAmount: undefined,
+		txPool: undefined,
 	})
 
 
@@ -111,6 +117,11 @@ export default function Home() {
 
 	const mintSFT = async (amountInEth, selectedPool) => {
 
+		console.log(amountInEth, 'amountInEth');
+		console.log(selectedPool, 'selectedPool')
+
+
+
 
 		const overrides = {
 			value: ethers.utils.parseEther(amountInEth.toString())
@@ -119,36 +130,50 @@ export default function Home() {
 
 		try {
 
+
 			setTxState({
-				txHash: undefined,
+				txSent: undefined,
 				txError: undefined,
-				txSuccess: undefined,
+				txSuccessHash: undefined, //hash
 			});
+
 
 
 			// sent transaction to network
 			const tx = await sftContract.donate(account, selectedPool, overrides)
 
-			setTxState({ txHash: tx.hash })
+			setTxState({ txSent: true })
 
 			// wait for the transaction to be mined
 			const receipt = await tx.wait();
 
-			// simulate a bit of delay for localnetwork
+
+			console.log(receipt, "receipt");
+
+
+			// simulate a delay of 2s for localnetwork
 			setTimeout(() => {
 				if (receipt.status === 1) {
 					setTxState({
-						txSuccess: true,
+						txSuccessHash: receipt.transactionHash,
+						txBlockHash: receipt.blockHash,
+						txAmount: amountInEth,
+						txPool: selectedPool,
 					});
 				}
 			}, 2000)
 
 
-			// console.log(receipt, 'receipt');
+
+
 
 		} catch (error) {
 
 			console.log(error, 'tx error')
+			setTxState({ txError: error });
+
+		} finally {
+			//update transaction states
 
 		}
 	}
@@ -214,7 +239,7 @@ export default function Home() {
 							science fund
 						</h1>
 						<BigButton
-							label='Stay tuned'
+							label='Donate'
 							href='/'
 						/>
 					</div>
@@ -255,8 +280,8 @@ export default function Home() {
 							}}
 						/>}
 
-						{txState.txHash && <TxMessage
-							msg={txState.txHash}
+						{txState.txSent && <TxMessage
+							msg="Waiting for the transaction to be mined"
 							close={() => { }}
 						/>}
 
@@ -270,11 +295,14 @@ export default function Home() {
 								}}
 							/>}
 
-						{txState.txSuccess && <TxMessage
-							msg="Transaction Success"
+						{txState.txSuccessHash && <ThankYouMessage
+							txhash={txState.txSuccessHash}
+							blockhash={txState.txBlockHash}
+							pool={txState.txPool}
+							amount={txState.txAmount}
 							close={() => {
 								setStartCheckout(false);
-								setTxState({ txSuccess: undefined })
+								setTxState({ txSuccessHash: undefined })
 							}}
 						/>
 						}

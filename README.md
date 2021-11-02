@@ -52,7 +52,7 @@ npx hardhat test
 
 - **Local Faucet**
 
-    Tap into local faucet to receive 999 ETH by updating your address in `receiver` in `tasks/faucet.ts` and run
+    Tap into local faucet to receive 999 ETH by updating your address in `LOCAL_USER_WALLET` in `.env` and run
 
     ```shell
     npx hardhat faucet --network localhost
@@ -65,7 +65,7 @@ npx hardhat test
 
 - **Contract address** 
 
-    Update the contract address in `.env` after deployment.
+    Update the localhost contract address in `.env` after deployment.
 
 
 # NFT metadata 
