@@ -1,7 +1,11 @@
 import Image from "next/Image";
 
-export default function ThankYouMessage(props) {
-    const { txhash, blockhash, pool, amount, close } = props
+export default function PreviewWindow(props) {
+    const { onClick, pool, amount, close } = props
+
+    console.log(pool, 'pool');
+    console.log(amount, 'amountInETH')
+
 
     return (
         <div className='fixed top-0 left-0 bg-opacity-30 bg-black h-screen w-full '>
@@ -17,8 +21,8 @@ export default function ThankYouMessage(props) {
 
 
                     <div className="mb-10">
-                        <h1 className="text-blue-900 text-2xl font-thin my-2">Thank You!</h1>
-                        <p className="text-sm mx-auto"> The transaction is successful. Link to transaction <a href="/" className="text-blue-900">receipt</a></p>
+                        <h1 className="text-blue-900 text-2xl font-thin my-2">Customise Your Token</h1>
+                        <p className="text-sm mx-auto"> Cutomise your token to preview a uniquely generated NFT receipt from Science Fund to be part of the discovery process.</p>
                     </div>
 
                     {/* actual receipt */}
@@ -28,12 +32,12 @@ export default function ThankYouMessage(props) {
                         <div className="text-left text-white mx-8 w-auto mt-8 mb-48">
                             <div className="my-2">
                                 <p className="text-sm font-thin">Transaction Hash</p>
-                                <span className="text-xs italic font-thin text-blue-300 break-all">{txhash}</span>
+                                <span className="text-xs italic font-thin text-blue-300 break-all">xxxxxxx</span>
                             </div>
 
                             <div className="my-2">
                                 <p className="text-sm font-thin">Block Hash</p>
-                                <p className="text-blue-300 font-thin text-sm break-all">{blockhash}</p>
+                                <p className="text-blue-300 font-thin text-sm break-all">xxxxxxxxx</p>
                             </div>
 
                             <div className="my-2">
@@ -60,8 +64,8 @@ export default function ThankYouMessage(props) {
                     <div className="h-auto mt-20">
 
 
-                        <button className='block mx-auto bg-gray-900 text-white w-1/2 hover:bg-gray-700 py-2 px-4 my-8 rounded'>
-                            <h2>Print Transaction Receipt</h2>
+                        <button className='block mx-auto bg-gray-900 text-white w-1/2 hover:bg-gray-700 py-2 px-4 my-8 rounded' onClick={onClick}>
+                            <h2>Mint</h2>
                         </button>
 
 
@@ -73,9 +77,6 @@ export default function ThankYouMessage(props) {
                             <h2><a src="/">Link to trace your token</a></h2>
                         </button>
                     </div>
-
-
-
 
 
                 </div>
