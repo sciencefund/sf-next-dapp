@@ -14,8 +14,9 @@ import TopicCard from "../components/topicCard";
 import BigButton from "../components/bigButton";
 import ConnectWallet from "../components/connectWallet";
 import DonateWindow from "../components/donateWindow";
-import TxMessage from "../components/ThankYouMessage";
+import TxMessage from "../components/txMessage";
 import ThankYouMessage from "../components/ThankYouMessage";
+import CheckoutScreen from "../components/checkoutScreen";
 
 
 
@@ -69,27 +70,21 @@ export default function Home() {
 	const loadContract = async () => {
 
 		if (typeof window.ethereum !== 'undefined') {
-
-
 			// load the network provider 
 			const provider = new ethers.providers.Web3Provider(window.ethereum)
 			setLocalProvider(provider);
 
 
-
 			// connet to contract on the network
 			const contract = new ethers.Contract(contractAddress, ScienceFund.abi, provider);
-			const connectedContract = await contract.connect(provider.getSigner(0))
+			const connectedContract = await contract.connect(provider.getSigner(0));
 			setSftContract(connectedContract);
 
-
 			try {
-
 				const contractBalance = await provider.getBalance(contractAddress)
 				const contractBalanceETH = ethers.utils.formatEther(BigNumber.from(contractBalance._hex).toString())
 
 				console.log(`${contractBalanceETH}ETH`, 'contractBalance in ether')
-
 
 			} catch (err) {
 				console.log("LOAD Contract Error:", err)
@@ -98,7 +93,6 @@ export default function Home() {
 		} else {
 			console.log("install metamask")
 		}
-
 	}
 
 
@@ -114,69 +108,6 @@ export default function Home() {
 			activate(connectors.Injected, err => console.log(err))
 		}
 	};
-
-	const mintSFT = async (amountInEth, selectedPool) => {
-
-		console.log(amountInEth, 'amountInEth');
-		console.log(selectedPool, 'selectedPool')
-
-
-
-
-		const overrides = {
-			value: ethers.utils.parseEther(amountInEth.toString())
-		}
-
-
-		try {
-
-
-			setTxState({
-				txSent: undefined,
-				txError: undefined,
-				txSuccessHash: undefined, //hash
-			});
-
-
-
-			// sent transaction to network
-			const tx = await sftContract.donate(account, selectedPool, overrides)
-
-			setTxState({ txSent: true })
-
-			// wait for the transaction to be mined
-			const receipt = await tx.wait();
-
-
-			console.log(receipt, "receipt");
-
-
-			// simulate a delay of 2s for localnetwork
-			setTimeout(() => {
-				if (receipt.status === 1) {
-					setTxState({
-						txSuccessHash: receipt.transactionHash,
-						txBlockHash: receipt.blockHash,
-						txAmount: amountInEth,
-						txPool: selectedPool,
-					});
-				}
-			}, 2000)
-
-
-
-
-
-		} catch (error) {
-
-			console.log(error, 'tx error')
-			setTxState({ txError: error });
-
-		} finally {
-			//update transaction states
-
-		}
-	}
 
 	//load user tokens from contract 
 	const loadUserTokens = async () => {
@@ -273,39 +204,21 @@ export default function Home() {
 								<h2>Connect wallet to donate</h2>
 							)}
 						</button>
-						{startCheckout && <DonateWindow
+						{/* {startCheckout && <DonateWindow
 							mintSFT={mintSFT}
 							close={() => {
 								setStartCheckout(false);
 							}}
-						/>}
+						/>} */}
 
-						{txState.txSent && <TxMessage
-							msg="Waiting for the transaction to be mined"
-							close={() => { }}
-						/>}
-
-						{txState.txError &&
-							<TxMessage
-								msg={txError}
-								close={() => {
-									setStartCheckout(false);
-									setTxState({ txError: undefined })
-
-								}}
-							/>}
-
-						{txState.txSuccessHash && <ThankYouMessage
-							txhash={txState.txSuccessHash}
-							blockhash={txState.txBlockHash}
-							pool={txState.txPool}
-							amount={txState.txAmount}
+						{startCheckout && <CheckoutScreen
 							close={() => {
 								setStartCheckout(false);
-								setTxState({ txSuccessHash: undefined })
 							}}
-						/>
-						}
+							sftContract={sftContract}
+							account={account}
+						/>}
+
 
 					</div>
 
