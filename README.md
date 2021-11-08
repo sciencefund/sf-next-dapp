@@ -4,7 +4,7 @@
 
 ## Get Started
 
-Install dependencies
+Go to your root directory and install dependencies
 
 ```shell
 npm i
@@ -33,6 +33,7 @@ npx hardhat help
 ```
 ### deploy to local network
 ```shell
+cd sf-next-dapp
 npx hardhat clean
 TS_NODE_TRANSPILE_ONLY=1 npx hardhat compile
 npx hardhat node
