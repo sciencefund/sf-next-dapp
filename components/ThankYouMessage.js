@@ -1,7 +1,9 @@
 import Image from "next/Image";
+import SvgImage from "./svgImage";
+
 
 export default function ThankYouMessage(props) {
-    const { txhash, blockhash, pool, amount, close } = props
+    const { txhash, blockhash, pool, amount, account, close } = props
 
     return (
         <div className='fixed top-0 left-0 bg-opacity-30 bg-black h-screen w-full '>
@@ -22,7 +24,12 @@ export default function ThankYouMessage(props) {
                     </div>
 
                     {/* actual receipt */}
-                    <div className="relative border-2 border-gray-400 w-3/4 max-w-lg mx-auto shadow-2xl py-4 from-green-900 via-gray-900 to-black bg-gradient-to-br">
+                    <SvgImage
+                        pool={pool}
+                        amount={amount}
+                        account={account}
+                        txhash={txhash} />
+                    {/* <div className="relative border-2 border-gray-400 w-3/4 max-w-lg mx-auto shadow-2xl py-4 from-green-900 via-gray-900 to-black bg-gradient-to-br">
                         <h1 className="text-gray-100 text-lg font-thin my-2">Science Fund Token</h1>
 
                         <div className="text-left text-white mx-8 w-auto mt-8 mb-48">
@@ -55,7 +62,7 @@ export default function ThankYouMessage(props) {
                             <Image src="/images/sflogo-tree.png" alt="logo-tree" width="100" height="100" />
                         </div>
 
-                    </div>
+                    </div> */}
 
                     <div className="h-auto mt-20">
 

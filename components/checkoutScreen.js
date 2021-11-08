@@ -55,7 +55,7 @@ export default function CheckoutScreen(props) {
 
 
             // sent transaction to network
-            const tx = await sftContract.donate(account, pool, overrides)
+            const tx = await sftContract.donate(pool, overrides)
 
             setTxState({
                 txSent: true,
@@ -108,8 +108,11 @@ export default function CheckoutScreen(props) {
                 {(!preview) && <MintWindow readyToPreview={readyToPreview} />}
 
 
-                {preview && !txState.txSent && <PreviewWindow onClick={() => { mintSFT() }} pool={pool}
-                    amount={value} close={close} />}
+                {preview && !txState.txSent && <PreviewWindow onClick={() => { mintSFT() }}
+                    pool={pool}
+                    amount={value}
+                    account={account}
+                    close={close} />}
 
                 {txState.txSent && preview && <TxMessage />}
 
@@ -119,6 +122,7 @@ export default function CheckoutScreen(props) {
                     blockhash={txState.txBlockHash}
                     pool={pool}
                     amount={value}
+                    account={account}
                     close={() => {
                         close();
                         setTxState({ txSuccessHash: undefined })

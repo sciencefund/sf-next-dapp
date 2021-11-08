@@ -19,7 +19,7 @@ import CheckoutScreen from "../components/checkoutScreen";
 
 // contract address on localhost:8545, maybe different for each deployment
 // const contractAddress = process.env.LOCALHOST_CONTRACT_ADDRESS;
-const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+const contractAddress = "0x0165878A594ca255338adfa4d48449f69242Eb8F";
 console.log(contractAddress);
 
 
@@ -47,14 +47,6 @@ export default function Home() {
 	const [startCheckout, setStartCheckout] = useState(false);
 
 
-	const [txState, setTxState] = useState({
-		txSent: undefined,
-		txError: undefined,
-		txSuccessHash: undefined, //hash
-		txBlockHash: undefined,
-		txAmount: undefined,
-		txPool: undefined,
-	})
 
 
 	useEffect(() => {
@@ -201,12 +193,7 @@ export default function Home() {
 								<h2>Connect wallet to donate</h2>
 							)}
 						</button>
-						{/* {startCheckout && <DonateWindow
-							mintSFT={mintSFT}
-							close={() => {
-								setStartCheckout(false);
-							}}
-						/>} */}
+
 
 						{startCheckout && <CheckoutScreen
 							close={() => {

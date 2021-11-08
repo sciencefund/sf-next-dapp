@@ -118,9 +118,9 @@ contract ScienceFund is
             abi.encodePacked(
                 'This NFT represents a permanent receipt to your donation of ',
                 tokenValueString,
-                ' ETH to Science Fund \\n',
+                ' Wei to Science Fund - ',
                 _params.pool,
-                'funding pool. This token connects your donation to the recepient and the impact it enables for generations to come.'
+                ' funding pool. This token connects your donation to the recepient and the impact it enables for generations to come.'
             )
         );
 
