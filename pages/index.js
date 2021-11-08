@@ -13,9 +13,6 @@ import ScienceFund from "../artifacts/contracts/ScienceFund.sol/ScienceFund.json
 import TopicCard from "../components/topicCard";
 import BigButton from "../components/bigButton";
 import ConnectWallet from "../components/connectWallet";
-import DonateWindow from "../components/donateWindow";
-import TxMessage from "../components/txMessage";
-import ThankYouMessage from "../components/ThankYouMessage";
 import CheckoutScreen from "../components/checkoutScreen";
 
 
@@ -100,7 +97,7 @@ export default function Home() {
 
 
 
-	const checkoutScreen = async () => {
+	const checkoutScreen = () => {
 		//start checkout screen
 		setStartCheckout(true);
 

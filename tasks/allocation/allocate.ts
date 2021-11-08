@@ -4,13 +4,13 @@ import { task, types } from "hardhat/config";
 import { ScienceFund } from "../../typechain";
 import { TASK_ALLOCATE } from "../task-names";
 
-task(TASK_ALLOCATE, "allocate a token and update its URI")
+task(TASK_ALLOCATE, "allocate a token and update its allocation hash ")
 .setAction( async (args, hre) => {
     let deployer: SignerWithAddress;
 
     // relevant contract abi
     const abi =  [
-        'function allocate(uint _tokenId, string memory _newTokenURI) public'
+        'function allocate(uint _tokenId, string memory _allocationHash) public onlyOwner'
       ];
 
     // get deployer address
@@ -35,9 +35,9 @@ task(TASK_ALLOCATE, "allocate a token and update its URI")
     const contract: ScienceFund = new hre.ethers.Contract(contractAddress, abi, deployer) as ScienceFund;
 
     // call allocate() fuction
-    const newTokenURI: string = process.env.TEST_METADATA_URI||" ";
+    const allocationHash: string = process.env.TEST_METADATA_URI||" ";
     const connectContract: ScienceFund = await contract.connect(deployer);
-    const receipt: ContractTransaction = await connectContract.allocate(1, newTokenURI, { gasLimit: 300000 });
+    const receipt: ContractTransaction = await connectContract.allocate(1, allocationHash, { gasLimit: 300000 });
 
     console.log('allocated:', receipt);
     process.exit(0)

@@ -6,6 +6,7 @@ import "@typechain/hardhat";
 import "./tasks/accounts";
 import "./tasks/deployment/deploy";
 import "./tasks/faucet";
+import "./tasks/donation/donate";
 import "./tasks/allocation/allocate";
 
 require("dotenv").config();
@@ -24,13 +25,9 @@ const config: HardhatUserConfig = {
     hardhat: {
       chainId: 31337,
       initialBaseFeePerGas: 0,
-      // accounts: [{ privateKey: `0x${process.env.PRIVATE_KEY}`, balance: '10000000000000000000000000' }]
     },
 
-    // localhost: {
-    //   url: 'http://localhost:8545',
-    //   chainId: 31337,
-    // },
+
   }
 };
 
