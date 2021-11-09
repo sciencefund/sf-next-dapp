@@ -1,4 +1,3 @@
-import Image from "next/Image";
 import SvgImage from "./svgImage";
 
 
@@ -29,40 +28,7 @@ export default function ThankYouMessage(props) {
                         amount={amount}
                         account={account}
                         txhash={txhash} />
-                    {/* <div className="relative border-2 border-gray-400 w-3/4 max-w-lg mx-auto shadow-2xl py-4 from-green-900 via-gray-900 to-black bg-gradient-to-br">
-                        <h1 className="text-gray-100 text-lg font-thin my-2">Science Fund Token</h1>
 
-                        <div className="text-left text-white mx-8 w-auto mt-8 mb-48">
-                            <div className="my-2">
-                                <p className="text-sm font-thin">Transaction Hash</p>
-                                <span className="text-xs italic font-thin text-blue-300 break-all">{txhash}</span>
-                            </div>
-
-                            <div className="my-2">
-                                <p className="text-sm font-thin">Block Hash</p>
-                                <p className="text-blue-300 font-thin text-sm break-all">{blockhash}</p>
-                            </div>
-
-                            <div className="my-2">
-                                <p className="text-sm font-thin">Funding pool</p>
-                                <p className="text-blue-300 font-thin text-sm">{pool}</p>
-                            </div>
-                            <div className="my-2">
-                                <p className="text-sm font-thin">Amount</p>
-                                <p className="text-blue-300 font-thin text-sm">{amount} ETH</p>
-                            </div>
-
-
-                        </div>
-
-
-
-                        <div className="absolute bottom-0 right-0 ">
-                            <p className="inline text-gray-100 text-sm italic">Reimagining the path to discovery</p>
-                            <Image src="/images/sflogo-tree.png" alt="logo-tree" width="100" height="100" />
-                        </div>
-
-                    </div> */}
 
                     <div className="h-auto mt-20">
 
