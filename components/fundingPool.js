@@ -9,7 +9,7 @@ export default function FundingPools(props) {
                         Curated Funding Pools{" "}
                     </h1>
                     <button
-                        className='bg-green-900 text-white hover:bg-green-700 py-2 px-4 rounded my-5'
+                        className='border-2 border-gray-700 rounded-xl hover:bg-gray-900 hover:text-white text-gray-700 py-2 px-4 rounded my-5'
                         onClick={onClick}>
                         {account ? (
                             <h2>Mint Tokens</h2>

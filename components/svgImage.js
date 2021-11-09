@@ -22,7 +22,7 @@ export default function SvgImage(props) {
 
                 <text x="165" y="60" font-size="45" text-anchor="middle" fill="black" font-weight="normal">SFT</text>
 
-                <text x="165" y="90" font-size="12" text-anchor="middle" fill="black" font-weight="noraml">reimagine scientific discovery</text>
+                <text x="165" y="90" font-size="12" text-anchor="middle" fill="black" font-weight="noraml" font-style="italic">Reimagine Scientific Discovery</text>
 
                 <filter id="insetshadow">
                     <feOffset
@@ -76,15 +76,14 @@ export default function SvgImage(props) {
 
 
                 <g>
-                    <text x="165" y="344" font-size="10" text-anchor="middle" font-weight="normal" fill="black">{account}</text>
 
-                    <text x="165" y="362" font-size="12" text-anchor="middle" font-weight="normal" fill="black">{amount} ETH | ~USD </text>
+                    <text x="165" y="344" font-size="12" text-anchor="middle" font-weight="normal" fill="black">{amount} ETH | allocation status</text>
 
+                    <text x="165" y="362" font-size="8" text-anchor="middle" font-weight="normal" fill="black">allocation Hash : to be assigned</text>
 
-                    <text x="165" y="380" font-size="8" text-anchor="middle" font-weight="normal" fill="black">{txhash} </text>
+                    <text x="165" y="380" font-size="8" text-anchor="middle" font-weight="normal" fill="black">completion hash: to be assigned</text>
 
-
-                    <text x="165" y="402" font-size="12" text-anchor="middle" font-weight="bold" fill="#F99500">{pool}</text>
+                    <text x="165" y="409" font-size="12" text-anchor="middle" font-weight="bold" fill="#F99500">{pool}</text>
                 </g>
 
             </svg>
