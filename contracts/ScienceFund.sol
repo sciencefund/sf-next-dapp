@@ -92,6 +92,9 @@ contract ScienceFund is
 
 
     function tokenURI(uint _tokenId) override public view returns(string memory){
+
+        //TODO: require tokenID to exist or have minted
+
         return constructTokenURImetadata(sfTokens[_tokenId]);
     }
 

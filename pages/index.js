@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 
 import Head from "next/head";
 
-
+import { ethers } from "ethers"
 import { useWeb3React } from "@web3-react/core";
 import { connectors } from "../context/connectors";
-import { ethers } from "ethers"
 import { BigNumber } from "@ethersproject/bignumber";
 
 import ScienceFund from "../artifacts/contracts/ScienceFund.sol/ScienceFund.json";
@@ -49,7 +48,7 @@ export default function Home() {
 
 
 	const [startCheckout, setStartCheckout] = useState(false);
-	const [startTrace, setStartTrace] = useState(true);
+	const [startTrace, setStartTrace] = useState(false);
 
 
 
@@ -57,6 +56,9 @@ export default function Home() {
 	useEffect(() => {
 		if (!sftContract) {
 			loadContract()
+		}
+		if (!account) {
+			activate(connectors.Injected, err => console.log(err))
 		}
 	});
 

@@ -22,8 +22,7 @@ export default function ThankYouMessage(props) {
                     <SvgImage
                         pool={pool}
                         amount={amount}
-                        account={account}
-                        txhash={txhash} />
+                        id="id" />
                 </div >
 
 

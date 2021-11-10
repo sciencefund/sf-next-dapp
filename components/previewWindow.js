@@ -25,8 +25,7 @@ export default function PreviewWindow(props) {
                     <SvgImage
                         pool={pool}
                         amount={amount}
-                        account={account}
-                        txhash="tx hash xxxx" />
+                        id='id' />
                 </div >
 
 
