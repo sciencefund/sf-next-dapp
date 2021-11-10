@@ -48,6 +48,7 @@ contract ScienceFund is
         string pool;
         string alloHash;
         string completeHash;
+        Stage stage;
     }
 
     Counters.Counter private _tokenIds;
@@ -84,7 +85,7 @@ contract ScienceFund is
 
         // mint 
         _safeMint(msg.sender, newTokenID);
-        _sfTokens[newTokenID] = SFtoken(newTokenID, msg.value, _selectedPool, getStage(Stage.AwaitAllocation), getStage(Stage.AwaitAllocation));
+        _sfTokens[newTokenID] = SFtoken(newTokenID, msg.value, _selectedPool, getStage(Stage.AwaitAllocation), getStage(Stage.AwaitAllocation), Stage.AwaitAllocation );
 
         //emit a donated event
         emit SFTokenMinted(newTokenID, msg.value, _selectedPool);
@@ -109,8 +110,10 @@ contract ScienceFund is
         string memory tokenIDstring = _params.tokenId.toString();
         
         // TODO:change from WEI to ETH representation to string
-        string memory tokenValueString = _params.value.toString();
-
+   
+        string memory value1 = (_params.value/1e18).toString();
+        string memory value2 = (_params.value/1e17 % 10).toString();
+        string memory tokenValueString = string(abi.encodePacked(value1,'.',value2));
 
         string memory name=string(
             abi.encodePacked(
@@ -138,21 +141,20 @@ contract ScienceFund is
                 '", "image":"',
                 'data:image/svg+xml;base64,',
                 Base64.encode(bytes(
-                    ReceiptImage()
-                )),
+                    ReceiptImage(tokenIDstring, tokenValueString, _params.pool, _params.alloHash, _params.completeHash))),
                 '"}'
             ) 
         );
 
     } 
 
-    function ReceiptImage() internal pure returns(string memory svg){
+    function ReceiptImage(string memory _id, string memory _amount, string memory _pool, string memory _alloHash, string memory _completeHash) internal pure returns(string memory svg){
 
         // add randomness here for visual enhancement
 
         svg=string(
             abi.encodePacked(
-                '<svg version="1.1" viewBox="0 0 331 426" width="331" height="426" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#FFFFFF" /><text x="165" y="60" font-size="45" text-anchor="middle" fill="black" font-weight="normal">SFT #{id}</text><text x="165" y="90" font-size="12" text-anchor="middle" fill="black" font-weight="noraml" font-style="italic">Reimagine Scientific Discovery</text></svg>'
+                '<svg version="1.1" viewBox="0 0 331 426" width="331" height="426" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#FFFFFF" /><text x="165" y="60" font-size="45" text-anchor="middle" fill="black" font-weight="normal">SFT-',_id,'</text><text x="165" y="90" font-size="12" text-anchor="middle" fill="black" font-weight="noraml" font-style="italic">Reimagine Scientific Discovery</text><filter id="insetshadow"><feOffset in="SourceGraphic" dx="0" dy="20" result="offOut" /><feGaussianBlur in="offOut" stdDeviation="20" result="offset-blur"/><feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"/><feFlood flood-color="#F99500" flood-opacity=".35" result="color"/><feComposite operator="in" in="color" in2="inverse" result="shadow"/></filter><g filter="url(#insetshadow)"><circle cx="167" cy="212" r="100" fill="#FFFFFF" stroke="#F99500" stroke-width="5" /></g><circle cx="168" cy="167" r="15" fill="#FFFFFF" stroke="#F99500" stroke-width="4" /><circle cx="217" cy="208" r="15" fill="#FFFFFF" stroke="#F99500" stroke-width="4" /><circle cx="125" cy="241" r="15" fill="#FFFFFF" stroke="#F99500" stroke-width="4" /><line x1="168" y1="188" x2="168" y2="312" stroke="#068B0B" stroke-width="4" stroke-linecap="round" /><path d="M 168 312 Q 168 241, 198 218" stroke="#068B0B" stroke-width="4" fill="transparent" stroke-linecap="round" /><path d="M 168 312 Q 168 261, 144 249" stroke="#068B0B" stroke-width="4" fill="transparent" stroke-linecap="round" /><text x="165" y="344" font-size="12" text-anchor="middle" font-weight="normal" fill="black">', _amount, ' ETH </text><text x="165" y="362" font-size="8" text-anchor="middle" font-weight="normal" fill="black">allocation Hash : ',_alloHash,'</text><text x="165" y="380" font-size="8" text-anchor="middle" font-weight="normal" fill="black">completion hash: ',_completeHash,'</text><text x="165" y="409" font-size="12" text-anchor="middle" font-weight="bold" fill="#F99500">', _pool,'</text></svg>'
             )
         );
     }
