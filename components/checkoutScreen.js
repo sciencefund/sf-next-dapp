@@ -5,7 +5,7 @@ import ModalDisplayScreen from "./modalDisplayScreen";
 
 import MintWindow from "./mintWindow";
 import ThankYouMessage from "./ThankYouMessage";
-
+import PreviewWindow from "./previewWindow";
 
 
 
@@ -17,7 +17,7 @@ export default function CheckoutScreen(props) {
     const [txError, setTxError] = useState(undefined);
 
 
-
+    const preview = false;
     const readyToMint = (amountInEth, selectedPool) => {
 
         mintSFT(amountInEth, selectedPool);
@@ -66,7 +66,7 @@ export default function CheckoutScreen(props) {
 
         <ModalDisplayScreen close={close}>
 
-            {(!txHash) && <MintWindow readyToMint={readyToMint} />}
+            {!preview && (!txHash) && <MintWindow readyToMint={readyToMint} />}
 
             {txHash && !txError && <ThankYouMessage
                 txhash={txHash}
@@ -74,6 +74,11 @@ export default function CheckoutScreen(props) {
                 sftContract={sftContract}
             />
             }
+            {preview && <PreviewWindow
+                onClick={() => { }}
+                pool={"funding pool"}
+                amount={2.5}
+            />}
 
         </ModalDisplayScreen>
 

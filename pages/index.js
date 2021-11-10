@@ -22,7 +22,7 @@ import TraceScreen from "../components/traceScreen";
 
 // contract address on localhost:8545, maybe different for each deployment
 // const contractAddress = process.env.LOCALHOST_CONTRACT_ADDRESS;
-const contractAddress = "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6";
+const contractAddress = "0x9A676e781A523b5d0C0e43731313A708CB607508";
 console.log(contractAddress);
 
 

@@ -2,16 +2,15 @@ import ModalDisplayScreen from "./modalDisplayScreen";
 import SvgImage from "./svgImage";
 
 export default function PreviewWindow(props) {
-    const { onClick, pool, amount, account, close } = props
+    const { onClick, pool, amount } = props
 
     console.log(pool, 'pool');
     console.log(amount, 'amountInETH')
 
 
     return (
-        <ModalDisplayScreen close={close}>
-            <div className='my-10 max-w-lg mx-auto text-center'>
 
+            <div className='my-10 max-w-lg mx-auto text-center'>
 
                 <div className="my-10 h-24">
                     <h1 className="text-blue-900 text-2xl font-thin my-5">Preview Your Token</h1>
@@ -44,7 +43,7 @@ export default function PreviewWindow(props) {
                     </button>
                 </div>
             </div>
-        </ModalDisplayScreen>
+
 
     );
 }
