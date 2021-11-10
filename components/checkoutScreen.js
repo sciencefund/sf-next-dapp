@@ -20,7 +20,9 @@ export default function CheckoutScreen(props) {
     // const [pool, setPool] = useState(undefined);
     // const [tokenURI, setTokenURI] = useState(undefined);
 
-    const [txHash, setTxHash] = useState();
+    const [txHash, setTxHash] = useState(undefined);
+
+    const [txError, setTxError] = useState(undefined);
     const [txState, setTxState] = useState({
         txSent: false,
         txError: undefined,
@@ -58,31 +60,30 @@ export default function CheckoutScreen(props) {
             // sent transaction to network
             const tx = await sftContract.donate(selectedPool, overrides)
 
-            setTxState({
-                txSent: true,
-            })
 
             // wait for the transaction to be mined
             const receipt = await tx.wait();
             console.log(receipt, "receipt value");
 
+            setTxHash(receipt.transactionHash);
+
             //how to confirm tx value and tx pool from tx receipt?
 
             // simulate a delay of 2s for localnetwork
-            setTimeout(() => {
-                if (receipt.status === 1) {
+            // setTimeout(() => {
+            //     if (receipt.status === 1) {
 
-                    setTxState({
-                        txSuccessHash: receipt.transactionHash,
+            //         setTxState({
+            //             txSuccessHash: receipt.transactionHash,
 
-                    });
-                }
-            }, 2000)
+            //         });
+            //     }
+            // }, 2000)
 
         } catch (error) {
 
             console.log(error, 'tx error')
-            setTxState({ txError: error });
+            setTxError(error);
 
         } finally {
             //update transaction states
@@ -97,16 +98,12 @@ export default function CheckoutScreen(props) {
 
         <ModalDisplayScreen close={close}>
 
-            {(!txState.txSent) && <MintWindow readyToMint={readyToMint} />}
+            {(!txHash) && <MintWindow readyToMint={readyToMint} />}
 
-            {txState.txSent && <ThankYouMessage
-                txhash={txState.txSuccessHash}
+            {txHash && !txError && <ThankYouMessage
+                txhash={txHash}
                 account={account}
                 sftContract={sftContract}
-                close={() => {
-                    close();
-                    setTxState({ txSent: false });
-                }}
             />
             }
 
