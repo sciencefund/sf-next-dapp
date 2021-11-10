@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
 
-import ModalDisplayScreen from "./modalDisplayScreen";
 import DisplayTokenURI from "./receiptDisplay";
 
 
