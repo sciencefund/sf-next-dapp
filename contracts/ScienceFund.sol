@@ -27,7 +27,8 @@ contract ScienceFund is
 
     using Strings for uint256;
     using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
+
+
 
     constructor() ERC721("ScienceFund", "SFT"){}
 
@@ -49,8 +50,9 @@ contract ScienceFund is
         string completeHash;
     }
 
-    SFtoken[] public sfTokens;
-
+    Counters.Counter private _tokenIds;
+    //mapping from tokenId to sfToken
+    mapping(uint => SFtoken) private _sfTokens;
 
  /**
   * @dev this helper function returns Enums to strings
@@ -82,7 +84,7 @@ contract ScienceFund is
 
         // mint 
         _safeMint(msg.sender, newTokenID);
-        sfTokens.push(SFtoken(newTokenID, msg.value, _selectedPool, getStage(Stage.AwaitAllocation), getStage(Stage.AwaitAllocation)));
+        _sfTokens[newTokenID] = SFtoken(newTokenID, msg.value, _selectedPool, getStage(Stage.AwaitAllocation), getStage(Stage.AwaitAllocation));
 
         //emit a donated event
         emit SFTokenMinted(newTokenID, msg.value, _selectedPool);
@@ -93,9 +95,9 @@ contract ScienceFund is
 
     function tokenURI(uint _tokenId) override public view returns(string memory){
 
-        //TODO: require tokenID to exist or have minted
+        //TODO: note this is tokenIndex not tokenId
 
-        return constructTokenURImetadata(sfTokens[_tokenId]);
+        return constructTokenURImetadata(_sfTokens[_tokenId]);
     }
 
 
@@ -150,7 +152,7 @@ contract ScienceFund is
 
         svg=string(
             abi.encodePacked(
-                '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="110"><rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" /></svg>'
+                '<svg version="1.1" viewBox="0 0 331 426" width="331" height="426" preserveAspectRatio="xMidYMin" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#FFFFFF" /><text x="165" y="60" font-size="45" text-anchor="middle" fill="black" font-weight="normal">SFT #{id}</text><text x="165" y="90" font-size="12" text-anchor="middle" fill="black" font-weight="noraml" font-style="italic">Reimagine Scientific Discovery</text></svg>'
             )
         );
     }
@@ -161,7 +163,7 @@ contract ScienceFund is
      */
     
     function allocate(uint _tokenId, string memory _allocationHash) public onlyOwner { 
-        SFtoken memory token = sfTokens[_tokenId];
+        SFtoken memory token = _sfTokens[_tokenId];
         require(keccak256(bytes(token.alloHash)) == keccak256(bytes(getStage(Stage.AwaitAllocation))),  "ScienceFund: the token need not been allocated yet");
 
         //update token stage

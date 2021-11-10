@@ -7,7 +7,7 @@ import ModalDisplayScreen from "./modelDisplayScreen"
 function DisplayTokenURI(props) {
     const { json } = props
 
-    //TODO: instead of counting : parse it properly data:application/json 
+    //TODO: instead of counting char: parse it properly data:application/json 
     const json0 = json.substring(23)
     const obj = JSON.parse(json0)
     console.log(obj.image);
@@ -57,26 +57,29 @@ export default function TraceScreen(props) {
                 // Array of tokenURIs, tokenIDs
                 const tokenURIs = [];
                 const tokenIDs = [];
-                for (let i = 0; i < (ownerTotal - 1); i++) {
+                for (let i = 0; i < ownerTotal; i++) {
+
                     var id_hex = await sftContract.tokenOfOwnerByIndex(account, i);
-                    var id_number = BigNumber.from(id_hex).toNumber();
-                    tokenIDs.push(id_number);
-                    const tokenURI = await sftContract.tokenURI(id_number)
+                    console.log(id_hex);
+                    tokenIDs.push(id_hex);
+
+                    const tokenURI = await sftContract.tokenURI(id_hex)
+                    console.log(tokenURI)
+
                     tokenURIs.push(tokenURI);
 
+                    // var id_number = BigNumber.from(id_hex).toNumber();
+                    console.log(tokenURI, id_hex)
+
                 }
-
+                console.log(tokenIDs)
                 updateTokens(tokenIDs, tokenURIs)
-                console.log(tokenIDs.length);
 
+                // const tokenURI = await sftContract.tokenURI(tokenIDs[2])
 
+                // console.log(tokenURI)
 
-                // const json = tokenURIs[0];
-                // const json0 = json.substring(23)
-                // const result = JSON.parse(json0)
-
-                // console.log(result.image);
-
+                // tokenURIs.push(tokenURI);
 
 
                 // console.log(await sftContract.ownerOf(1), 'ownerOf 1')

@@ -7,9 +7,7 @@ export default function SvgImage(props) {
     const { pool, amount, id } = props
 
     return (
-
-            <svg version="1.1"
-                viewBox="0 0 331 426"
+        <svg version="1.1" viewBox="0 0 331 426"
                 width="331" height="426"
                 preserveAspectRatio="xMidYMin"
                 xmlns="http://www.w3.org/2000/svg">
