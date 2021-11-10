@@ -1,24 +1,8 @@
 import { useEffect, useState } from "react"
 
 import { BigNumber } from "@ethersproject/bignumber";
-import ModalDisplayScreen from "./modelDisplayScreen"
-
-
-function DisplayTokenURI(props) {
-    const { json } = props
-
-    //TODO: instead of counting char: parse it properly data:application/json 
-    const json0 = json.substring(23)
-    const obj = JSON.parse(json0)
-    console.log(obj.image);
-
-
-    return (
-        <div className='mx-auto my-10 w-full h-auto bg-white rounded shadow-2xl p-2 '>
-            <img src={obj.image} alt="SFT" />
-        </div >
-    )
-}
+import ModalDisplayScreen from "./modalDisplayScreen"
+import DisplayTokenURI from "./receiptDisplay";
 
 
 export default function TraceScreen(props) {

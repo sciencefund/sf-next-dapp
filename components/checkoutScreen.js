@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { ethers } from "ethers"
 
-import ModalDisplayScreen from "./modelDisplayScreen";
+import ModalDisplayScreen from "./modalDisplayScreen";
 
 import MintWindow from "./mintWindow";
 import ThankYouMessage from "./ThankYouMessage";
-import PreviewWindow from "./previewWindow";
-import TxMessage from "./txMessage";
+
+// import PreviewWindow from "./previewWindow";
+// import TxMessage from "./txMessage";
 
 
 
@@ -14,13 +15,14 @@ export default function CheckoutScreen(props) {
     // This component contains all the states related to this transaction
     const { close, sftContract, account } = props
 
-    const [preview, setPreview] = useState(false)
+    // const [preview, setPreview] = useState(false)
+    // const [value, setValue] = useState(0.2);
+    // const [pool, setPool] = useState(undefined);
+    // const [tokenURI, setTokenURI] = useState(undefined);
 
-    const [value, setValue] = useState(0.2);
-    const [pool, setPool] = useState(undefined);
-
+    const [txHash, setTxHash] = useState();
     const [txState, setTxState] = useState({
-        txSent: undefined,
+        txSent: false,
         txError: undefined,
         txSuccessHash: undefined, //hash
         txBlockHash: undefined,
@@ -29,30 +31,32 @@ export default function CheckoutScreen(props) {
     })
 
 
-    const readyToPreview = (amountInEth, selectedPool) => {
+    const readyToMint = (amountInEth, selectedPool) => {
+        // setValue(amountInEth);
+        // setPool(selectedPool);
+        mintSFT(amountInEth, selectedPool);
 
-        setValue(amountInEth);
-        setPool(selectedPool);
-        setPreview(true)
     }
 
-    const mintSFT = async () => {
+
+
+    const mintSFT = async (amountInETH, selectedPool) => {
 
         const overrides = {
-            value: ethers.utils.parseEther(value.toString())
+            value: ethers.utils.parseEther(amountInETH.toString())
         }
 
         try {
-            setTxState({
-                txSent: undefined,
-                txError: undefined,
-                txSuccessHash: undefined, //txhash
-                txBlockHash: undefined
-            });
+            // setTxState({
+            //     txSent: undefined,
+            //     txError: undefined,
+            //     txSuccessHash: undefined, //txhash
+            //     txBlockHash: undefined
+            // });
 
 
             // sent transaction to network
-            const tx = await sftContract.donate(pool, overrides)
+            const tx = await sftContract.donate(selectedPool, overrides)
 
             setTxState({
                 txSent: true,
@@ -67,9 +71,10 @@ export default function CheckoutScreen(props) {
             // simulate a delay of 2s for localnetwork
             setTimeout(() => {
                 if (receipt.status === 1) {
+
                     setTxState({
                         txSuccessHash: receipt.transactionHash,
-                        txBlockHash: receipt.blockHash,
+
                     });
                 }
             }, 2000)
@@ -86,31 +91,21 @@ export default function CheckoutScreen(props) {
     }
 
 
+
+
     return (
 
         <ModalDisplayScreen close={close}>
 
-            {(!preview) && <MintWindow readyToPreview={readyToPreview} />}
+            {(!txState.txSent) && <MintWindow readyToMint={readyToMint} />}
 
-
-            {preview && !txState.txSent && <PreviewWindow onClick={() => { mintSFT() }}
-                pool={pool}
-                amount={value}
-                account={account}
-                close={close} />}
-
-            {txState.txSent && preview && <TxMessage />}
-
-
-            {txState.txSuccessHash && <ThankYouMessage
+            {txState.txSent && <ThankYouMessage
                 txhash={txState.txSuccessHash}
-                blockhash={txState.txBlockHash}
-                pool={pool}
-                amount={value}
                 account={account}
+                sftContract={sftContract}
                 close={() => {
                     close();
-                    setTxState({ txSuccessHash: undefined })
+                    setTxState({ txSent: false });
                 }}
             />
             }
