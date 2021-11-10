@@ -4,25 +4,19 @@
 export default function SvgImage(props) {
     // This component contains all the states related to this transaction
 
-    const { pool, amount, account, txhash } = props
+    const { pool, amount, id } = props
 
     return (
-
-
-        <div className='mx-auto w-3/4 h-auto border-4 border-white mt-24 p-2 bg-white rounded shadow-2xl' >
-
-
-            <svg version="1.1"
-                viewBox="0 0 331 426"
+        <svg version="1.1" viewBox="0 0 331 426"
                 width="331" height="426"
                 preserveAspectRatio="xMidYMin"
                 xmlns="http://www.w3.org/2000/svg">
 
-                <rect width="100%" height="100%" fill="#FFFFFF" />
+            <rect width="100%" height="100%" fill="#FFFFFF" />
 
-                <text x="165" y="60" font-size="45" text-anchor="middle" fill="black" font-weight="normal">SFT</text>
+            <text x="165" y="60" font-size="45" text-anchor="middle" fill="black" font-weight="normal">SFT #{id}</text>
 
-                <text x="165" y="90" font-size="12" text-anchor="middle" fill="black" font-weight="noraml">reimagine scientific discovery</text>
+                <text x="165" y="90" font-size="12" text-anchor="middle" fill="black" font-weight="noraml" font-style="italic">Reimagine Scientific Discovery</text>
 
                 <filter id="insetshadow">
                     <feOffset
@@ -76,21 +70,20 @@ export default function SvgImage(props) {
 
 
                 <g>
-                    <text x="165" y="344" font-size="10" text-anchor="middle" font-weight="normal" fill="black">{account}</text>
 
-                    <text x="165" y="362" font-size="12" text-anchor="middle" font-weight="normal" fill="black">{amount} ETH | ~USD </text>
+                <text x="165" y="344" font-size="12" text-anchor="middle" font-weight="normal" fill="black">{amount} ETH | awaiting allocation </text>
 
+                    <text x="165" y="362" font-size="8" text-anchor="middle" font-weight="normal" fill="black">allocation Hash : to be assigned</text>
 
-                    <text x="165" y="380" font-size="8" text-anchor="middle" font-weight="normal" fill="black">{txhash} </text>
+                    <text x="165" y="380" font-size="8" text-anchor="middle" font-weight="normal" fill="black">completion hash: to be assigned</text>
 
-
-                    <text x="165" y="402" font-size="12" text-anchor="middle" font-weight="bold" fill="#F99500">{pool}</text>
+                    <text x="165" y="409" font-size="12" text-anchor="middle" font-weight="bold" fill="#F99500">{pool}</text>
                 </g>
 
             </svg>
 
 
-        </div >
+
 
 
     );

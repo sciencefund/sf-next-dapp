@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { ethers } from "ethers"
 
+import ModalDisplayScreen from "./modelDisplayScreen";
 
 import MintWindow from "./mintWindow";
 import ThankYouMessage from "./ThankYouMessage";
 import PreviewWindow from "./previewWindow";
 import TxMessage from "./txMessage";
-
 
 
 
@@ -27,7 +27,6 @@ export default function CheckoutScreen(props) {
         txAmount: undefined,
         txPool: undefined,
     })
-
 
 
     const readyToPreview = (amountInEth, selectedPool) => {
@@ -52,8 +51,6 @@ export default function CheckoutScreen(props) {
             });
 
 
-
-
             // sent transaction to network
             const tx = await sftContract.donate(pool, overrides)
 
@@ -63,9 +60,7 @@ export default function CheckoutScreen(props) {
 
             // wait for the transaction to be mined
             const receipt = await tx.wait();
-
             console.log(receipt, "receipt value");
-
 
             //how to confirm tx value and tx pool from tx receipt?
 
@@ -93,45 +88,37 @@ export default function CheckoutScreen(props) {
 
     return (
 
+        <ModalDisplayScreen close={close}>
 
-        <div className='fixed top-0 left-0 bg-opacity-30 bg-black h-screen w-full '>
-            {/* foreground modal screen */}
-            <div className='relative  w-3/4 h-auto border-4 border-white mx-auto mt-24 p-2 bg-white rounded shadow-2xl'>
-                {/* close button */}
-                <button
-                    className='absolute top-0 right-0 w-8 h-8 bg-gray-900 text-white border-2 rounded-full shadow-2xl text-xl hover:bg-gray-700'
-                    onClick={close}>
-                    &times;
-                </button>
+            {(!preview) && <MintWindow readyToPreview={readyToPreview} />}
 
 
-                {(!preview) && <MintWindow readyToPreview={readyToPreview} />}
+            {preview && !txState.txSent && <PreviewWindow onClick={() => { mintSFT() }}
+                pool={pool}
+                amount={value}
+                account={account}
+                close={close} />}
+
+            {txState.txSent && preview && <TxMessage />}
 
 
-                {preview && !txState.txSent && <PreviewWindow onClick={() => { mintSFT() }}
-                    pool={pool}
-                    amount={value}
-                    account={account}
-                    close={close} />}
+            {txState.txSuccessHash && <ThankYouMessage
+                txhash={txState.txSuccessHash}
+                blockhash={txState.txBlockHash}
+                pool={pool}
+                amount={value}
+                account={account}
+                close={() => {
+                    close();
+                    setTxState({ txSuccessHash: undefined })
+                }}
+            />
+            }
 
-                {txState.txSent && preview && <TxMessage />}
+        </ModalDisplayScreen>
 
 
-                {txState.txSuccessHash && <ThankYouMessage
-                    txhash={txState.txSuccessHash}
-                    blockhash={txState.txBlockHash}
-                    pool={pool}
-                    amount={value}
-                    account={account}
-                    close={() => {
-                        close();
-                        setTxState({ txSuccessHash: undefined })
-                    }}
-                />
-                }
 
-            </div>
-        </div>
 
     );
 }
