@@ -1,30 +1,36 @@
+import ModalDisplayScreen from "./modelDisplayScreen";
+
 export default function TxMessage() {
 
 
 
     return (
-        <div className='fixed top-0 left-0 bg-opacity-30 bg-black h-screen w-full '>
+        <ModalDisplayScreen close="">
+
+            <div className='my-10 max-w-lg mx-auto text-center'>
 
 
-        <div className='relative  w-3/4 h-auto border-4 border-white mx-auto mt-24 p-2 bg-white rounded shadow-2xl'>
-            <button
-                className='absolute top-0 right-0 w-8 h-8 bg-gray-900 text-white border-2 rounded-full shadow-2xl text-xl hover:bg-gray-700'
-                >
-                &times;
-            </button>
-                <div className='my-auto max-w-lg mx-auto text-center w-1/2'>
+                <div className="my-10 h-24">
+                </div>
 
 
-                <div className="mb-10">
-                    <h1 className="text-blue-900 text-xl font-thin my-2">Thank You!</h1>
-                        <p className="text-xs mx-auto"> The transaction is sent, waiting to be included in a block. <a href="/"
-                            className="text-blue-900">Check your status here.</a>
-                        </p>
-                    </div>
+                <div className='mx-auto  my-auto my-10 w-auto h-96 bg-white rounded shadow-2xl p-2' >
+                    <h1 className="text-blue-900 text-2xl font-thin my-10">Transaction Sent!</h1>
+                    <p className="text-sm w-1/2 mx-auto"> The transaction is sent successfully to the Ethereum public blockchain.
+                    </p>
+
+
+                    <p className="my-24 px-5 w-1/2 mx-auto text-blue-900 italic">Waiting for your transaction to be mined ...</p>
+                </div >
+
+
+
+                <div className="h-48 mt-10">
+
+                </div>
             </div>
 
+        </ModalDisplayScreen>
 
-        </div>
-    </div>
 );
 }

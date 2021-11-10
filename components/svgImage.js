@@ -8,19 +8,15 @@ export default function SvgImage(props) {
 
     return (
 
-
-        <div className='mx-auto w-3/4 h-auto border-4 border-white mt-24 p-2 bg-white rounded shadow-2xl' >
-
-
             <svg version="1.1"
                 viewBox="0 0 331 426"
                 width="331" height="426"
                 preserveAspectRatio="xMidYMin"
                 xmlns="http://www.w3.org/2000/svg">
 
-                <rect width="100%" height="100%" fill="#FFFFFF" />
+            <rect width="100%" height="100%" fill="#FFFFFF" />
 
-                <text x="165" y="60" font-size="45" text-anchor="middle" fill="black" font-weight="normal">SFT</text>
+            <text x="165" y="60" font-size="45" text-anchor="middle" fill="black" font-weight="normal">SFT #1</text>
 
                 <text x="165" y="90" font-size="12" text-anchor="middle" fill="black" font-weight="noraml" font-style="italic">Reimagine Scientific Discovery</text>
 
@@ -89,7 +85,7 @@ export default function SvgImage(props) {
             </svg>
 
 
-        </div >
+
 
 
     );
