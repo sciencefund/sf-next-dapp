@@ -1,4 +1,4 @@
-import ModalDisplayScreen from "./modelDisplayScreen";
+import ModalDisplayScreen from "./modalDisplayScreen";
 
 export default function TxMessage() {
 

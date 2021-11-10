@@ -1,4 +1,4 @@
-import ModalDisplayScreen from "./modelDisplayScreen";
+import ModalDisplayScreen from "./modalDisplayScreen";
 import SvgImage from "./svgImage";
 
 export default function PreviewWindow(props) {

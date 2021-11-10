@@ -4,12 +4,12 @@ import { useState } from "react";
 
 
 export default function MintWindow(props) {
-    const { readyToPreview } = props;
+    const { readyToMint } = props;
 
     const [value, setValue] = useState(0.1);
     const [selectedPool, setSelectedPool] = useState('Science Fund General Pool');
 
-    const exRate = 4146.55;
+    const exRate = 4740.29;
     const userDonate = (event) => {
         setValue(event.target.value)
 
@@ -80,7 +80,7 @@ export default function MintWindow(props) {
                 Add a few finishing touches on the next page!</p>
 
             <button className='bg-gray-900 text-white w-2/3 hover:bg-gray-700 py-2 px-4 my-8 rounded'>
-                <h2 onClick={() => readyToPreview(value, selectedPool)}>Preview</h2>
+                <h2 onClick={() => readyToMint(value, selectedPool)}>Mint</h2>
             </button>
 
         </div >

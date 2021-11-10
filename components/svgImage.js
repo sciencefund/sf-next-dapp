@@ -14,7 +14,7 @@ export default function SvgImage(props) {
 
             <rect width="100%" height="100%" fill="#FFFFFF" />
 
-            <text x="165" y="60" font-size="45" text-anchor="middle" fill="black" font-weight="normal">SFT #{id}</text>
+            <text x="165" y="60" font-size="45" text-anchor="middle" fill="black" font-weight="normal">SFT -{id}</text>
 
                 <text x="165" y="90" font-size="12" text-anchor="middle" fill="black" font-weight="noraml" font-style="italic">Reimagine Scientific Discovery</text>
 
@@ -71,11 +71,11 @@ export default function SvgImage(props) {
 
                 <g>
 
-                <text x="165" y="344" font-size="12" text-anchor="middle" font-weight="normal" fill="black">{amount} ETH | awaiting allocation </text>
+                <text x="165" y="342" font-size="12" text-anchor="middle" font-weight="normal" fill="black">{amount} ETH | awaiting allocation </text>
 
-                    <text x="165" y="362" font-size="8" text-anchor="middle" font-weight="normal" fill="black">allocation Hash : to be assigned</text>
+                <text x="165" y="362" font-size="10" text-anchor="middle" font-weight="normal" fill="black">Allocation Hash : to be assigned</text>
 
-                    <text x="165" y="380" font-size="8" text-anchor="middle" font-weight="normal" fill="black">completion hash: to be assigned</text>
+                <text x="165" y="380" font-size="10" text-anchor="middle" font-weight="normal" fill="black">Completion Hash: to be assigned</text>
 
                     <text x="165" y="409" font-size="12" text-anchor="middle" font-weight="bold" fill="#F99500">{pool}</text>
                 </g>
