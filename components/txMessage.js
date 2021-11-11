@@ -24,7 +24,6 @@ export default function TxMessage() {
                 </div >
 
 
-
                 <div className="h-48 mt-10">
 
                 </div>

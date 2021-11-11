@@ -51,7 +51,7 @@ export default function ThankYouMessage(props) {
 
             {/* display real receipt */}
             {tokenURI && <DisplayTokenURI json={tokenURI} />}
-            {!tokenURI && <div className='mx-auto  my-auto my-10 w-auto h-96 bg-white rounded shadow-2xl p-2' >
+            {!tokenURI && <div className='mx-auto  my-auto my-10 w-full h-96 bg-white rounded shadow-2xl p-2' style={{ height: "428px" }}>
                 <h1 className="text-blue-900 text-2xl font-thin my-10">Transaction Sent!</h1>
                 <p className="text-sm w-1/2 mx-auto"> The transaction is sent successfully to the Ethereum public blockchain.
                 </p>

@@ -6,6 +6,8 @@ export default function SvgImage(props) {
 
     const { pool, amount, id } = props
 
+    const color = "rgb(255, 0, 0)"
+
     return (
         <svg version="1.1" viewBox="0 0 331 426"
                 width="331" height="426"
@@ -37,7 +39,7 @@ export default function SvgImage(props) {
                         result='inverse'
                     />
                     <feFlood
-                        flood-color='#F99500'
+                    flood-color={color}
                         flood-opacity='.35'
                         result='color'
                     />
@@ -51,15 +53,15 @@ export default function SvgImage(props) {
 
                 </filter>
                 <g filter="url(#insetshadow)">
-                    <circle cx="167" cy="212" r="100" fill="#FFFFFF" stroke="#F99500"
+                <circle cx="167" cy="212" r="100" fill="#FFFFFF" stroke={color}
                         stroke-width="5" />
 
                 </g>
-                <circle cx="168" cy="167" r="15" fill="#FFFFFF" stroke="#F99500" stroke-width="4" />
+            <circle cx="168" cy="167" r="15" fill="#FFFFFF" stroke={color} stroke-width="4" />
 
-                <circle cx="217" cy="208" r="15" fill="#FFFFFF" stroke="#F99500" stroke-width="4" />
+            <circle cx="217" cy="208" r="15" fill="#FFFFFF" stroke={color} stroke-width="4" />
 
-                <circle cx="125" cy="241" r="15" fill="#FFFFFF" stroke="#F99500" stroke-width="4" />
+            <circle cx="125" cy="241" r="15" fill="#FFFFFF" stroke={color} stroke-width="4" />
 
                 <line x1="168" y1="188" x2="168" y2="312" stroke="#068B0B" stroke-width="4" stroke-linecap="round" />
 
@@ -77,7 +79,7 @@ export default function SvgImage(props) {
 
                 <text x="165" y="380" font-size="10" text-anchor="middle" font-weight="normal" fill="black">Completion Hash: to be assigned</text>
 
-                    <text x="165" y="409" font-size="12" text-anchor="middle" font-weight="bold" fill="#F99500">{pool}</text>
+                <text x="165" y="409" font-size="12" text-anchor="middle" font-weight="bold" fill={color}>{pool}</text>
                 </g>
 
             </svg>

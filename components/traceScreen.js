@@ -95,7 +95,7 @@ export default function TraceScreen(props) {
                 </div>
 
                 {/* all tokens receipt */}
-                <div className="grid gap-10 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 overflow-hidden">
+                <div className="grid gap-10 xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 overflow-hidden">
                     {tokenUris.map((content, index) => <DisplayTokenURI key={index} json={content} />)}
                 </div>
 
