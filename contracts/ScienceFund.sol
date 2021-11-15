@@ -137,4 +137,9 @@ contract ScienceFund is
         _setSFToken(_tokenId, token);
     }
 
+
+    function withdraw() public onlyOwner{
+        // TODO: withdraw with respect to funding pool?
+    }
+
 }
