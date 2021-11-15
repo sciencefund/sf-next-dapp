@@ -85,11 +85,9 @@ describe("scienceFund", () => {
 
 
     // test allocation
-    describe("allocation", async () => {
-
+    describe("allocate()", async () => {
+    
         it("should allocate token ID to preselected hash", async function () {
-
-
             //mint 3 token
             const contract = await scienceFund.connect(deployer);
 
@@ -97,23 +95,52 @@ describe("scienceFund", () => {
                 var amount:string = String(i+2);
                 await contract.donate("Neuroscience", { value: ethers.utils.parseEther(amount)})
             }
-
-
+   
             const latestTokenId: BigNumber = await contract.totalSupply();
-
-
             const allHash: string = process.env.TEST_ALLO_HASH || " ";
 
             await expect(contract.allocate(latestTokenId, allHash))
                 .to.emit(scienceFund, "SFTokenAllocated")
-                .withArgs(latestTokenId, ethers.utils.parseEther("5"),"Neuroscience", allHash);
+                .withArgs(latestTokenId, allHash);
 
-            expect(await contract.getTokenAllocationHash
-            (latestTokenId)).to.equal(allHash);
+            const token = await contract.getSFToken(latestTokenId);
+            expect(token.alloHash).to.equal(allHash);
 
         })
     })
 
+       // test completion
+       describe("complete()", async () => {
+    
+        it("should emit complete event and update allocation hash--after being allocated", async function () {
+
+            const contract = await scienceFund.connect(deployer);
+            const allHash: string = process.env.TEST_ALLO_HASH || " ";
+
+            //mint and allocate 3 token
+
+            for (var i:number = 0; i<=3; i++){
+                var amount:string = String(i+2);
+                await contract.donate("Neuroscience", { value: ethers.utils.parseEther(amount)});       
+    
+            }
+   
+
+            const latestTokenId: BigNumber = await contract.totalSupply();
+         
+
+            await contract.allocate(latestTokenId, allHash);
+            await expect(contract.complete(latestTokenId, allHash))
+                .to.emit(scienceFund, "SFTokenCompleted")
+                .withArgs(latestTokenId, allHash);
+
+            var token = await contract.getSFToken(latestTokenId);
+     
+
+            expect(token.completeHash).to.equal(allHash);
+
+        })
+    })
 
 
 });
