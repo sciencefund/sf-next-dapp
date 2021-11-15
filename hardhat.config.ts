@@ -11,6 +11,9 @@ import "./tasks/allocation/allocate";
 
 require("dotenv").config();
 
+const INFURA_API_KEY = process.env.INFURA_API_KEY;
+const RINKEBY_PRIVATE_KEY = process.env.RINKEBY_PRIVATE_KEY || ' ';
+
 
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
@@ -26,7 +29,10 @@ const config: HardhatUserConfig = {
       chainId: 31337,
       initialBaseFeePerGas: 0,
     },
-
+    rinkeby: {
+      url: `https://rinkeby.infura.io/v3/${INFURA_API_KEY}`,
+      accounts: [RINKEBY_PRIVATE_KEY],
+  },
 
   }
 };
