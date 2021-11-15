@@ -2,6 +2,8 @@ import { ethers } from "hardhat";
 import chai from "chai";
 import { ScienceFund__factory, ScienceFund } from "../typechain";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
+import { BigNumber } from "@ethersproject/bignumber";
+
 
 const { expect } = chai;
 
@@ -25,28 +27,94 @@ describe("scienceFund", () => {
         expect(scienceFund.address).to.properAddress;
     });
 
+
+
+    // test deployment
     describe("deployment", async () => {
-        it("has expected name and symbol", async function () {
+        it("should have expected name and symbol", async function () {
             expect(await scienceFund.name()).to.equal("ScienceFund");
             expect(await scienceFund.symbol()).to.equal("SFT");
         });
     });
 
+
+
+
+    // test donate function
     describe("donate", async () => {
-        const tokenId = ethers.BigNumber.from(1);
-        
-        it("donate 1.3Eth to Neuroscience when anyone calls it", async function () {
+
+        it("should donate 1.3Eth to Neuroscience and the owner has it", async function () {
 
             const selectedPool: string = "Neuroscience";
-            //TODO: more tests with specific payable amount
+            const contract = await scienceFund.connect(other);
+            const amount: BigNumber = ethers.utils.parseEther("1.3");
 
-            await expect(scienceFund.connect(deployer).donate(other.address, selectedPool))
-                .to.emit(scienceFund, 'Transfer')
-                .withArgs(ZERO_ADDRESS, other.address, tokenId);
+            const overrides = {
+                value: amount
+            }
+            
+            expect(await contract.donate(selectedPool, overrides))
+                .to.emit(scienceFund, 'SFTokenMinted')
+                .withArgs(await contract.totalSupply(), amount, selectedPool);
+
+            const tokenID = await contract.totalSupply();
+
+            expect(await contract.ownerOf(tokenID)).to.equal(other.address)
+            
         })
-
-
     })
+
+
+
+    // test tokenURI
+    describe("tokenURI", async () => {
+
+        it("should fail if tokenID does not exist", async function () {
+
+            const contract = await scienceFund.connect(deployer);
+      
+
+            const total: BigNumber = await contract.totalSupply();
+            const tokenId: BigNumber = total.add(BigNumber.from("1"));
+
+            await expect(contract.tokenURI(tokenId))
+                .to.be.revertedWith("ScienceFund: Token needs to be minted first");
+
+        })
+    })
+
+
+    // test allocation
+    describe("allocation", async () => {
+
+        it("should allocate token ID to preselected hash", async function () {
+
+
+            //mint 3 token
+            const contract = await scienceFund.connect(deployer);
+
+            for (var i:number = 0; i<=3; i++){
+                var amount:string = String(i+2);
+                await contract.donate("Neuroscience", { value: ethers.utils.parseEther(amount)})
+            }
+
+
+            const latestTokenId: BigNumber = await contract.totalSupply();
+
+
+            const allHash: string = process.env.TEST_ALLO_HASH || " ";
+
+            await expect(contract.allocate(latestTokenId, allHash))
+                .to.emit(scienceFund, "SFTokenAllocated")
+                .withArgs(latestTokenId, ethers.utils.parseEther("5"),"Neuroscience", allHash);
+
+            expect(await contract.getTokenAllocationHash
+            (latestTokenId)).to.equal(allHash);
+
+        })
+    })
+
+
 
 });
 

@@ -52,8 +52,9 @@ contract ScienceFund is
     }
 
     Counters.Counter private _tokenIds;
-    //mapping from tokenId to sfToken
+    //mapping from tokenId to sfToken 
     mapping(uint => SFtoken) private _sfTokens;
+
 
  /**
   * @dev this helper function returns Enums to strings
@@ -66,6 +67,13 @@ contract ScienceFund is
         } else {
             return "Completed";
         }
+    }
+
+ /**
+  * @dev this helper function returns an SFToken from a tokenID
+  */
+    function getTokenAllocationHash(uint _tokenID) public view returns (string memory){
+        return _sfTokens[_tokenID].alloHash;
     }
 
 
@@ -85,7 +93,13 @@ contract ScienceFund is
 
         // mint 
         _safeMint(msg.sender, newTokenID);
-        _sfTokens[newTokenID] = SFtoken(newTokenID, msg.value, _selectedPool, getStage(Stage.AwaitAllocation), getStage(Stage.AwaitAllocation), Stage.AwaitAllocation );
+        _sfTokens[newTokenID] = SFtoken(
+            newTokenID, 
+            msg.value, 
+            _selectedPool, 
+            getStage(Stage.AwaitAllocation), 
+            getStage(Stage.AwaitAllocation), 
+            Stage.AwaitAllocation );
 
         //emit a donated event
         emit SFTokenMinted(newTokenID, msg.value, _selectedPool);
@@ -93,12 +107,17 @@ contract ScienceFund is
     }
  
 
-
+    /** 
+     * @notice this generates a dynamic sftoken receipt for the donation and this receipt will update the allocation and completion status accordingly
+     *
+     * @dev input is a tokenID
+     */
     function tokenURI(uint _tokenId) override public view returns(string memory){
 
-        //TODO: note this is tokenIndex not tokenId
-
+        require (_tokenId <= totalSupply(), "ScienceFund: Token needs to be minted first" );
+ 
         return constructTokenURImetadata(_sfTokens[_tokenId]);
+    
     }
 
 
@@ -106,11 +125,12 @@ contract ScienceFund is
     function constructTokenURImetadata(SFtoken memory _params) internal pure returns (string memory){
 
 
-        // TODO:change from big number to decimal representation to string
         string memory tokenIDstring = _params.tokenId.toString();
         
-        // TODO:change from WEI to ETH representation to string
-   
+        /**
+        @dev how to convert from WEI to ETH with all decimals, this only saves to 1dp
+         */
+
         string memory value1 = (_params.value/1e18).toString();
         string memory value2 = (_params.value/1e17 % 10).toString();
         string memory tokenValueString = string(abi.encodePacked(value1,'.',value2));
@@ -170,11 +190,17 @@ contract ScienceFund is
      */
     
     function allocate(uint _tokenId, string memory _allocationHash) public onlyOwner { 
+
+        require (_tokenId <= totalSupply(), "ScienceFund: Token needs to be minted first" );
+
         SFtoken memory token = _sfTokens[_tokenId];
+
         require(keccak256(bytes(token.alloHash)) == keccak256(bytes(getStage(Stage.AwaitAllocation))),  "ScienceFund: the token need not been allocated yet");
 
-        //update token stage
-        token.alloHash = _allocationHash;
+        /**
+        @notice update the allocation hash
+         */
+        _sfTokens[_tokenId].alloHash = _allocationHash;
 
         /// @notice Emit Event TokenAllocated()
         emit SFTokenAllocated(token.tokenId, token.value, token.pool, _allocationHash);
