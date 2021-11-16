@@ -47,3 +47,6 @@ types
 
 #sample data files
 samples
+
+# yarn
+yarn.lock
