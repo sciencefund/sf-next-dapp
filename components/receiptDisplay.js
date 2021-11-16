@@ -7,9 +7,8 @@ export default function DisplayTokenURI(props) {
     const obj = JSON.parse(json0)
 
     //TODO: instead of counting char: parse it properly "data:image/svg+xml;base64,"
-    const json1 = obj.image.substring(26)
-    const decoded = atob(json1)
-    console.log(decoded);
+    // const json1 = obj.image.substring(26)
+    // const decoded = atob(json1)
 
 
     return (
