@@ -11,7 +11,6 @@ import PreviewWindow from "./previewWindow";
 
 
 
-const contractAddress = process.env.NEXT_PUBLIC_RINKEBY_CONTRACT_ADDRESS;
 
 
 
