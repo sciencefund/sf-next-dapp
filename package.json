@@ -1,7 +1,10 @@
 {
   "name": "sf-next-dapp",
   "version": "0.1.0",
-  "private": true,
+  "private": true,  
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
