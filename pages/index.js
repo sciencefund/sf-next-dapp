@@ -8,7 +8,6 @@ import { BigNumber } from "@ethersproject/bignumber";
 import WalletConnectProvider from '@walletconnect/web3-provider'
 
 
-import ScienceFund from "../artifacts/contracts/ScienceFund.sol/ScienceFund.json";
 
 import BigButton from "../components/bigButton";
 import ConnectWallet from "../components/connectWallet";
@@ -21,8 +20,6 @@ import TraceScreen from "../components/traceScreen";
 
 
 
-const contractAddress = process.env.NEXT_PUBLIC_RINKEBY_CONTRACT_ADDRESS;
-console.log(contractAddress);
 
 
 const providerOptions = {
@@ -98,18 +95,26 @@ export default function Home()
 	{
 
 		const provider = await web3Modal.connect()
-		const web3Provider = new providers.Web3Provider(provider)
+		const web3Provider = new ethers.providers.Web3Provider(provider)
 		const signer = web3Provider.getSigner()
 		const address = await signer.getAddress()
 		const network = await web3Provider.getNetwork()
+		console.log(web3Provider, "web3provider")
+
+		// connet to contract on the network
+		// const contract = new ethers.Contract(contractAddress, ScienceFund.abi, web3Provider);
+		// const connectedContract = contract.connect(web3Provider.getSigner(0));
+		// setSftContract(connectedContract);
+
 
 		dispatch({
 			type: 'SET_WEB3_PROVIDER',
-			provider,
+			provider: provider,
 			etherProvider: web3Provider,
-			address,
+			address: address,
 			network: network.name
 		})
+
 
 	}, [])
 
@@ -135,45 +140,10 @@ export default function Home()
 	}, [connect])
 
 
-	// useEffect(() => {
-	// 	if (!sftContract) {
-	// 		loadContract()
-	// 	}
-	// 	if (!account) {
-	// 		activate(connectors.Injected, err => console.log(err))
-	// 	}
-	// });
 
 
 
-	// load contract
-	const loadContract = async () => {
 
-		if (typeof window.ethereum !== 'undefined') {
-			// load the network provider 
-			// const provider = new ethers.providers.Web3Provider(window.ethereum)
-			// setLocalProvider(provider);
-
-
-			// connet to contract on the network
-			const contract = new ethers.Contract(contractAddress, ScienceFund.abi, web3Provider);
-			const connectedContract = await contract.connect(web3Provider.getSigner(0));
-			setSftContract(connectedContract);
-
-			try {
-				const contractBalance = await provider.getBalance(contractAddress)
-				const contractBalanceETH = ethers.utils.formatEther(BigNumber.from(contractBalance._hex).toString())
-
-				console.log(`${contractBalanceETH}ETH`, 'contractBalance in ether')
-
-			} catch (err) {
-				console.log("LOAD Contract Error:", err)
-			}
-
-		} else {
-			console.log("install metamask")
-		}
-	}
 
 
 
@@ -211,7 +181,7 @@ export default function Home()
 			</Head>
 			<div className='w-screen mx-auto'>
 				<section className='relative mx-auto bg-dark-water bg-fixed bg-cover w-screen'>
-					{address ?
+					{provider ?
 						<ConnectWallet
 							onClick={disconnect}
 							label='Disconnect'
@@ -246,19 +216,19 @@ export default function Home()
 
 
 
-				{startCheckout && <CheckoutScreen
+				{startCheckout && provider && <CheckoutScreen
 					close={() => {
 						setStartCheckout(false);
 					}}
-					sftContract={sftContract}
+					provider={provider}
 					account={address}
 				/>}
 
-				{startTrace && <TraceScreen
+				{startTrace && provider && <TraceScreen
 					close={() => {
 						setStartTrace(false);
 					}}
-					sftContract={sftContract}
+					provider={provider}
 					account={address}
 				/>}
 

@@ -6,30 +6,25 @@ import DisplayTokenURI from "./receiptDisplay";
 
 
 export default function ThankYouMessage(props) {
-    const { txhash, account, sftContract } = props
+    const { txhash, txSuccess, account, sftContract } = props
     const [tokenURI, setTokenURI] = useState(undefined);
 
-
     const loadReceipt = async () => {
-        if (!account) {
-            "Connect Wallet"
-        }
-        if (account) {
+
+        if (txSuccess)
+        {
 
             try {
+                // await for the tx to finish otherwise the display is from a previous token
+
                 const balanceHex = await sftContract.balanceOf(account)
                 const ownerTotal = BigNumber.from(balanceHex).toNumber();
                 var id_hex = await sftContract.tokenOfOwnerByIndex(account, ownerTotal - 1);
                 const sft = await sftContract.tokenURI(id_hex)
 
-                // simulate a delay
-                setTimeout(() =>
-                {
-                    setTokenURI(sft);
-                }, 2000)
+                setTokenURI(sft);
 
-                // var id_number = BigNumber.from(id_hex).toNumber();
-                console.log(sft, id_hex)
+
             }
             catch (e) {
                 console.log(e, 'error in loading user receipt')
@@ -37,7 +32,7 @@ export default function ThankYouMessage(props) {
         }
     }
 
-    useEffect(() => { loadReceipt() }, [])
+    useEffect(() => { loadReceipt() }, [txSuccess])
 
     return (
 
