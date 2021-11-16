@@ -101,11 +101,6 @@ export default function Home()
 		const network = await web3Provider.getNetwork()
 		console.log(web3Provider, "web3provider")
 
-		// connet to contract on the network
-		// const contract = new ethers.Contract(contractAddress, ScienceFund.abi, web3Provider);
-		// const connectedContract = contract.connect(web3Provider.getSigner(0));
-		// setSftContract(connectedContract);
-
 
 		dispatch({
 			type: 'SET_WEB3_PROVIDER',

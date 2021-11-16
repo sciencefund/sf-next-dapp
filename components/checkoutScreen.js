@@ -12,7 +12,7 @@ import PreviewWindow from "./previewWindow";
 
 
 const contractAddress = process.env.NEXT_PUBLIC_RINKEBY_CONTRACT_ADDRESS;
-console.log(contractAddress);
+
 
 
 export default function CheckoutScreen(props) {
@@ -21,7 +21,6 @@ export default function CheckoutScreen(props) {
 
     const [txHash, setTxHash] = useState(undefined);
     const [txSuccess, setTxSuccess] = useState(false);
-
     const [txError, setTxError] = useState(undefined);
     const [sftContract, setSftContract] = useState(undefined);
 
@@ -39,7 +38,7 @@ export default function CheckoutScreen(props) {
         // load the network provider 
         const web3Provider = new ethers.providers.Web3Provider(provider)
         // connet to contract on the network
-        const contract = new ethers.Contract(contractAddress, ScienceFund.abi, web3Provider);
+        const contract = new ethers.Contract(process.env.NEXT_PUBLIC_RINKEBY_CONTRACT_ADDRESS, ScienceFund.abi, web3Provider);
 
         const sftContract = contract.connect(web3Provider.getSigner(0));
         setSftContract(sftContract);
