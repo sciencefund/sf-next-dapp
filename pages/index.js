@@ -20,21 +20,19 @@ import TraceScreen from "../components/traceScreen";
 
 
 
-// contract address on localhost:8545, maybe different for each deployment
-// const contractAddress = process.env.LOCALHOST_CONTRACT_ADDRESS;
-const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+const contractAddress = process.env.NEXT_PUBLIC_RINKEBY_CONTRACT_ADDRESS;
 console.log(contractAddress);
 
 
-const NETWORKS = {
-	localhost: {
-		name: "localhost",
-		color: "#666666",
-		chainId: 31337,
-		blockExplorer: "",
-		rpcUrl: "http://" + 'localhost' + ":8545",
-	}
-}
+// const NETWORKS = {
+// 	localhost: {
+// 		name: "localhost",
+// 		color: "#666666",
+// 		chainId: 31337,
+// 		blockExplorer: "",
+// 		rpcUrl: "http://" + 'localhost' + ":8545",
+// 	}
+// }
 
 
 
