@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { ethers } from "ethers"
 
-import ScienceFund from "../artifacts/contracts/ScienceFund.sol/ScienceFund.json";
 
 
 import ModalDisplayScreen from "./modalDisplayScreen";
 import MintWindow from "./mintWindow";
 import ThankYouMessage from "./ThankYouMessage";
 import PreviewWindow from "./previewWindow";
-
+import CheckoutScreenHeader from "./checkoutScreenHeader";
 
 
 
@@ -16,41 +15,26 @@ import PreviewWindow from "./previewWindow";
 
 export default function CheckoutScreen(props) {
     // This component contains all the states related to this transaction
-    const { close, provider, account } = props
+    const { close, contract, account, network } = props
 
-    const [txHash, setTxHash] = useState(undefined);
+    const [txHash, setTxHash] = useState(false);
     const [txSuccess, setTxSuccess] = useState(false);
     const [txError, setTxError] = useState(undefined);
-    const [sftContract, setSftContract] = useState(undefined);
 
     const preview = false;
-    const readyToMint = (amountInEth, selectedPool) => {
-
-        mintSFT(amountInEth, selectedPool);
-
-    }
 
 
-    const mintSFT = async (amountInETH, selectedPool) => {
-
-
-        // load the network provider 
-        const web3Provider = new ethers.providers.Web3Provider(provider)
-        // connet to contract on the network
-        const contract = new ethers.Contract(process.env.NEXT_PUBLIC_RINKEBY_CONTRACT_ADDRESS, ScienceFund.abi, web3Provider);
-
-        const sftContract = contract.connect(web3Provider.getSigner(0));
-        setSftContract(sftContract);
+    const mintSFT = async (amountInETH, selectedPool) =>
+    {
         const overrides = {
             value: ethers.utils.parseEther(amountInETH.toString())
         }
 
-        try {
-
-
-
+        try
+        {
+            // const sftContract = contract.connect(web3Provider.getSigner(0));
             // sent transaction to network
-            const tx = await sftContract.donate(selectedPool, overrides)
+            const tx = await contract.donate(selectedPool, overrides)
 
             console.log(tx.hash);
             setTxHash(tx.hash);
@@ -63,8 +47,6 @@ export default function CheckoutScreen(props) {
                 setTxSuccess(true);
             }
 
-
-
         } catch (error) {
 
             console.log(error, 'tx error')
@@ -76,22 +58,37 @@ export default function CheckoutScreen(props) {
         }
     }
 
-
-
-
     return (
+        <ModalDisplayScreen close={close} network={network}>
 
-        <ModalDisplayScreen close={close}>
 
-            {!preview && (!txHash) && <MintWindow readyToMint={readyToMint} />}
+            {!preview && (!txHash) &&
+            <CheckoutScreenHeader
+                heading="Donate to Science fund"
+                subheading="Place your donation in ETH. Additional instructions or help please contact us at:"
+                link="contact@sciencefund.io"
+            >
 
-            {txHash && !txError && <ThankYouMessage
-                txhash={txHash}
-                txSuccess={txSuccess}
-                account={account}
-                sftContract={sftContract}
-            />
+                    <MintWindow mintSFT={mintSFT} network={network} />
+                </CheckoutScreenHeader>
             }
+
+
+            {txHash && !txError && <CheckoutScreenHeader
+                heading="Thank You!"
+                subheading="The transaction is sent successfully. Here is your transaction hash "
+                link={txHash}
+            >
+                <ThankYouMessage
+                    txhash={txHash}
+                    txSuccess={txSuccess}
+                    account={account}
+                    sftContract={contract}
+            />
+
+            </CheckoutScreenHeader>
+            }
+
             {preview && <PreviewWindow
                 onClick={() => { }}
                 pool={"funding pool"}

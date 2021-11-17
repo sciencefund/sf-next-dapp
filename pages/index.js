@@ -2,20 +2,19 @@ import { useState, useEffect, useReducer, useCallback } from "react";
 
 import Head from "next/head";
 
-import { ethers, providers } from "ethers"
+import { ethers } from "ethers"
 import Web3Modal from "web3modal"
-import { BigNumber } from "@ethersproject/bignumber";
 import WalletConnectProvider from '@walletconnect/web3-provider'
 
 
+import ScienceFund from "../artifacts/contracts/ScienceFund.sol/ScienceFund.json";
 
 import BigButton from "../components/bigButton";
 import ConnectWallet from "../components/connectWallet";
 import CheckoutScreen from "../components/checkoutScreen";
 import Summary from "../components/summary";
 import WhyNFT from "../components/whyNFT";
-import FundingPools from "../components/fundingPool";
-import Trace from "../components/trace";
+import HowItWorks from "../components/howitworks";
 import TraceScreen from "../components/traceScreen";
 
 
@@ -46,9 +45,10 @@ if (typeof window !== 'undefined')
 
 const initialState = {
 	provider: null,
-	etherProvider: null,
+	web3Provider: null,
 	address: null,
 	network: null,
+	contract: null,
 }
 
 function reducer(state, action)
@@ -59,19 +59,10 @@ function reducer(state, action)
 			return {
 				...state,
 				provider: action.provider,
-				etherProvider: action.web3Provider,
+				web3Provider: action.web3Provider,
 				address: action.address,
-				network: action.network
-			}
-		case 'SET_ADDRESS':
-			return {
-				...state,
-				address: action.address,
-			}
-		case 'SET_CHAIN_ID':
-			return {
-				...state,
-				network: action.network
+				network: action.network,
+				contract: action.contract
 			}
 		case 'RESET_WEB3_PROVIDER':
 			return initialState
@@ -86,32 +77,32 @@ export default function Home()
 {
 
 	const [state, dispatch] = useReducer(reducer, initialState)
-	const { provider, etherProvider, address, network } = state
+	const { provider, web3Provider, address, network, contract } = state
 
-	const [sftContract, setSftContract] = useState(null);
 	const [startCheckout, setStartCheckout] = useState(false);
 	const [startTrace, setStartTrace] = useState(false);
 
-	const connect = useCallback(async function ()
+	const connect = async () =>
 	{
-
 		const provider = await web3Modal.connect()
 		const web3Provider = new ethers.providers.Web3Provider(provider)
 		const signer = web3Provider.getSigner()
 		const address = await signer.getAddress()
 		const network = await web3Provider.getNetwork()
 
+		// conncet to contract on the network
+		const contract = new ethers.Contract(process.env.NEXT_PUBLIC_RINKEBY_CONTRACT_ADDRESS, ScienceFund.abi, web3Provider);
+		const sftContract = contract.connect(signer);
 
 		dispatch({
 			type: 'SET_WEB3_PROVIDER',
 			provider: provider,
-			etherProvider: web3Provider,
+			web3Provider: web3Provider,
 			address: address,
-			network: network.name
+			network: network.name,
+			contract: sftContract
 		})
-
-
-	}, [])
+	}
 
 	const disconnect = useCallback(async function ()
 	{
@@ -135,15 +126,25 @@ export default function Home()
 	}, [connect])
 
 
+	//listen to events specified by EIP-1193
+	useEffect(() =>
+	{
+		if (provider?.on)
+		{
+			// https://docs.ethers.io/v5/concepts/best-practices/#best-practices--network-changes
+			provider.on('chainChanged', () => { window.location.reload() })
 
+			//subscription cleanup
+			return () =>
+			{
+				if (provider.removeListener)
+				{
+					provider.removeListener('chainChanged', () => { window.location.reload() })
+				}
+			}
+		}
 
-
-
-
-
-
-
-
+	}, [provider])
 
 	const checkoutScreen = () => {
 		//start checkout screen
@@ -175,16 +176,18 @@ export default function Home()
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 			<div className='w-screen mx-auto'>
-				<section className='relative mx-auto bg-dark-water bg-fixed bg-cover w-screen'>
-					{provider ?
+				<section className='relative mx-auto bg-gradient-to-r from-gray-900 via-green-700 to-gray-900 bg-opacity-10 w-screen'>
+					{web3Provider ?
 						<ConnectWallet
 							onClick={disconnect}
 							label='Disconnect'
+							network={network}
 						/>
 						:
 						<ConnectWallet
 							onClick={connect}
 							label='Connect Wallet'
+							network={network}
 						/>
 					}
 
@@ -195,36 +198,64 @@ export default function Home()
 						<h1 className='text-grey-900 text-6xl uppercase mb-6 font-bold tracking-wide'>
 							science fund
 						</h1>
-						<BigButton label="Learn more" />
+						<p className='mx-auto my-20 font-thin font-sans text-2xl md:w-96 sm:w-full '>  Bringing a continuously evolving impact trail to backers of scientific knowledge with NFTs and beyond.
+						</p>
+						<a href="#Donate">
+							<BigButton label="Learn more" onClick={() => { }} />
+						</a>
+					</div>
+					<div className="h-20">
 					</div>
 				</section>
 
-				<div className="w-screen bg-misty-forest bg-opacity-50 bg-cover h-full">
 
+				<section>
 					<Summary />
-					<FundingPools onClick={checkoutScreen} account={address} />
+				</section>
 
-					<Trace onClick={traceScreen} account={address} />
+				<section id="Donate">
+				<div className="w-screen bg-misty-forest bg-opacity-10 bg-cover h-full text-gray-300">
+						<div className="mx-auto text-center w-3/4 py-8">
+							<h1 className=' text-4xl'>
+								How It Works{" "}
+							</h1>
+							<div className="flex items-center justify-around">
+								<BigButton
+									label=
+									"Mint Tokens"
+									onClick={checkoutScreen}
+								/>
+								<BigButton
+									label="Trace Tokens"
+									onClick={traceScreen}
+								/>
 
+							</div>
+						</div>
+
+						<HowItWorks />
 					<WhyNFT />
 				</div>
+				</section>
 
 
 
-				{startCheckout && provider && <CheckoutScreen
+				{startCheckout && contract && <CheckoutScreen
 					close={() => {
 						setStartCheckout(false);
 					}}
-					provider={provider}
+					contract={contract}
 					account={address}
+					network={network}
 				/>}
 
-				{startTrace && provider && <TraceScreen
+				{startTrace && web3Provider && <TraceScreen
 					close={() => {
 						setStartTrace(false);
 					}}
-					provider={provider}
+					contract={contract}
 					account={address}
+					network={network}
 				/>}
 
 
@@ -232,9 +263,8 @@ export default function Home()
 
 
 			</div>
-			<footer className='flex flex-row justify-between my-2 mx-2'>
-				<a>@ 2021 science fund dao</a>
-				<a href='#'>white paper</a>
+			<footer className='mx-auto text-center my-2 mx-2 p-5'>
+				<a>@ 2021 Science Fund. All Rights Reserved.</a>
 			</footer>
 		</div>
 	);
