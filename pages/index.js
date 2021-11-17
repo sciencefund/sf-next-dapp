@@ -7,6 +7,7 @@ import Web3Modal from "web3modal"
 import WalletConnectProvider from '@walletconnect/web3-provider'
 
 
+import ScienceFund from "../artifacts/contracts/ScienceFund.sol/ScienceFund.json";
 
 import BigButton from "../components/bigButton";
 import ConnectWallet from "../components/connectWallet";
@@ -48,6 +49,7 @@ const initialState = {
 	web3Provider: null,
 	address: null,
 	network: null,
+	contract: null,
 }
 
 function reducer(state, action)
@@ -60,17 +62,8 @@ function reducer(state, action)
 				provider: action.provider,
 				web3Provider: action.web3Provider,
 				address: action.address,
-				network: action.network
-			}
-		case 'SET_ADDRESS':
-			return {
-				...state,
-				address: action.address,
-			}
-		case 'SET_CHAIN_ID':
-			return {
-				...state,
-				network: action.network
+				network: action.network,
+				contract: action.contract
 			}
 		case 'RESET_WEB3_PROVIDER':
 			return initialState
@@ -85,9 +78,8 @@ export default function Home()
 {
 
 	const [state, dispatch] = useReducer(reducer, initialState)
-	const { provider, web3Provider, address, network } = state
+	const { provider, web3Provider, address, network, contract } = state
 
-	const [sftContract, setSftContract] = useState(null);
 	const [startCheckout, setStartCheckout] = useState(false);
 	const [startTrace, setStartTrace] = useState(false);
 
@@ -98,13 +90,18 @@ export default function Home()
 		const signer = web3Provider.getSigner()
 		const address = await signer.getAddress()
 		const network = await web3Provider.getNetwork()
+
+		// conncet to contract on the network
+		const contract = new ethers.Contract(process.env.NEXT_PUBLIC_RINKEBY_CONTRACT_ADDRESS, ScienceFund.abi, web3Provider);
+		const sftContract = contract.connect(signer);
+
 		dispatch({
 			type: 'SET_WEB3_PROVIDER',
 			provider: provider,
 			web3Provider: web3Provider,
 			address: address,
-			network: network.name
-
+			network: network.name,
+			contract: sftContract
 		})
 	}
 
@@ -218,20 +215,22 @@ export default function Home()
 
 
 
-				{startCheckout && provider && <CheckoutScreen
+				{startCheckout && contract && <CheckoutScreen
 					close={() => {
 						setStartCheckout(false);
 					}}
-					provider={provider}
+					contract={contract}
 					account={address}
+					network={network}
 				/>}
 
-				{startTrace && provider && <TraceScreen
+				{startTrace && web3Provider && <TraceScreen
 					close={() => {
 						setStartTrace(false);
 					}}
-					provider={provider}
+					provider={web3Provider}
 					account={address}
+					network={network}
 				/>}
 
 
@@ -240,8 +239,8 @@ export default function Home()
 
 			</div>
 			<footer className='flex flex-row justify-between my-2 mx-2'>
-				<a>@ 2021 science fund dao</a>
-				<a href='#'>white paper</a>
+				<a>@ 2021 Science Fund</a>
+				<a href='#'>All Rights Reserved.</a>
 			</footer>
 		</div>
 	);

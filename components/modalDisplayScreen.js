@@ -1,6 +1,6 @@
 export default function ModalDisplayScreen(props) {
 
-    const { close } = props
+    const { close, network } = props
 
     return (
 
@@ -14,6 +14,13 @@ export default function ModalDisplayScreen(props) {
                     onClick={close}>
                     &times;
                 </button>
+                {/* network indicator */}
+                {network &&
+                    <div className="capitalize text-gray-400 flex items-center">
+                        <div className="rounded-full h-3 w-3 bg-green-900"></div>
+                        <span className="mx-2">{network}</span>
+                    </div>
+                }
                 {props.children}
             </div>
         </div>
