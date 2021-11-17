@@ -40,10 +40,12 @@ coverage.json
 
 #Hardhat files
 cache
-artifacts
 typechain
 types
 
 
 #sample data files
 samples
+
+# yarn
+yarn.lock

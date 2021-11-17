@@ -20,7 +20,8 @@ import TraceScreen from "../components/traceScreen";
 
 
 
-
+const contractAddress = process.env.NEXT_PUBLIC_RINKEBY_CONTRACT_ADDRESS;
+console.log(contractAddress);
 
 const providerOptions = {
 	walletconnect: {
@@ -99,7 +100,6 @@ export default function Home()
 		const signer = web3Provider.getSigner()
 		const address = await signer.getAddress()
 		const network = await web3Provider.getNetwork()
-		console.log(web3Provider, "web3provider")
 
 
 		dispatch({
