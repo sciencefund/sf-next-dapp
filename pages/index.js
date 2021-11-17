@@ -2,9 +2,8 @@ import { useState, useEffect, useReducer, useCallback } from "react";
 
 import Head from "next/head";
 
-import { ethers, providers } from "ethers"
+import { ethers } from "ethers"
 import Web3Modal from "web3modal"
-import { BigNumber } from "@ethersproject/bignumber";
 import WalletConnectProvider from '@walletconnect/web3-provider'
 
 
@@ -46,7 +45,7 @@ if (typeof window !== 'undefined')
 
 const initialState = {
 	provider: null,
-	etherProvider: null,
+	web3Provider: null,
 	address: null,
 	network: null,
 }
@@ -59,7 +58,7 @@ function reducer(state, action)
 			return {
 				...state,
 				provider: action.provider,
-				etherProvider: action.web3Provider,
+				web3Provider: action.web3Provider,
 				address: action.address,
 				network: action.network
 			}
@@ -86,32 +85,28 @@ export default function Home()
 {
 
 	const [state, dispatch] = useReducer(reducer, initialState)
-	const { provider, etherProvider, address, network } = state
+	const { provider, web3Provider, address, network } = state
 
 	const [sftContract, setSftContract] = useState(null);
 	const [startCheckout, setStartCheckout] = useState(false);
 	const [startTrace, setStartTrace] = useState(false);
 
-	const connect = useCallback(async function ()
+	const connect = async () =>
 	{
-
 		const provider = await web3Modal.connect()
 		const web3Provider = new ethers.providers.Web3Provider(provider)
 		const signer = web3Provider.getSigner()
 		const address = await signer.getAddress()
 		const network = await web3Provider.getNetwork()
-
-
 		dispatch({
 			type: 'SET_WEB3_PROVIDER',
 			provider: provider,
-			etherProvider: web3Provider,
+			web3Provider: web3Provider,
 			address: address,
 			network: network.name
+
 		})
-
-
-	}, [])
+	}
 
 	const disconnect = useCallback(async function ()
 	{
@@ -135,15 +130,25 @@ export default function Home()
 	}, [connect])
 
 
+	//listen to events specified by EIP-1193
+	useEffect(() =>
+	{
+		if (provider?.on)
+		{
+			// https://docs.ethers.io/v5/concepts/best-practices/#best-practices--network-changes
+			provider.on('chainChanged', () => { window.location.reload() })
 
+			//subscription cleanup
+			return () =>
+			{
+				if (provider.removeListener)
+				{
+					provider.removeListener('chainChanged', () => { window.location.reload() })
+				}
+			}
+		}
 
-
-
-
-
-
-
-
+	}, [provider])
 
 	const checkoutScreen = () => {
 		//start checkout screen
@@ -176,15 +181,17 @@ export default function Home()
 			</Head>
 			<div className='w-screen mx-auto'>
 				<section className='relative mx-auto bg-dark-water bg-fixed bg-cover w-screen'>
-					{provider ?
+					{web3Provider ?
 						<ConnectWallet
 							onClick={disconnect}
 							label='Disconnect'
+							network={network}
 						/>
 						:
 						<ConnectWallet
 							onClick={connect}
 							label='Connect Wallet'
+							network={network}
 						/>
 					}
 
