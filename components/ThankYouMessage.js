@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
 
 import DisplayTokenURI from "./receiptDisplay";
-
+import ProgressIndicator from "./ProgressIndicator";
 
 
 export default function ThankYouMessage(props) {
@@ -49,11 +49,7 @@ export default function ThankYouMessage(props) {
                 </p>
 
 
-                <button className='flex items-center justify-center  block mx-auto bg-gray-900 text-white w-1/2 hover:bg-gray-700 py-2 px-4 my-20 rounded' >
-                    <div style={{ "borderTopColor": "transparent" }} className="w-6 h-6 border-2 border-solid border-gray-100 rounded-full animate-spin mx-2">
-                    </div>
-                    <h2>Processing</h2>
-                </button>
+                <ProgressIndicator label="mining your transaction" />
 
             </div >
             }

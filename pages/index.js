@@ -228,7 +228,7 @@ export default function Home()
 					close={() => {
 						setStartTrace(false);
 					}}
-					provider={web3Provider}
+					contract={contract}
 					account={address}
 					network={network}
 				/>}

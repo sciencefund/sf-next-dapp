@@ -35,6 +35,7 @@ export default function MintWindow(props) {
         if (network != "rinkeby")
         {
             setRightNetwork(false)
+            //TODO: UI to prompt change screen
         }
         //call mintSFT
         if (value > 0.3 && network == "rinkeby")
