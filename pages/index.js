@@ -203,9 +203,14 @@ export default function Home()
 					</div>
 				</section>
 
-				<div className="w-screen bg-misty-forest bg-opacity-50 bg-cover h-full">
 
+				<section>
 					<Summary />
+				</section>
+
+				<div className="w-screen bg-misty-forest bg-opacity-10 bg-cover h-full text-gray-300">
+
+
 					<FundingPools onClick={checkoutScreen} account={address} />
 
 					<Trace onClick={traceScreen} account={address} />

@@ -8,8 +8,7 @@ module.exports = {
 		extend: {
 			backgroundImage: {
 				"dark-water": "url('/images/header-bg.jpg')",
-				"dark-hole": "url('/images/fakurian-design-6zF2CgAZVXY-unsplash.jpg')",
-				"misty-forest": "url('/images/clement-m-igX2deuD9lc-unsplash.jpg')"
+				"misty-forest": "url('/images/evgeni-evgeniev-LPKk3wtkC-g-unsplash.jpg')"
 			},
 			fontFamily: {
 				serif: ["KohSantepheap", "Georgia", "serif"],
