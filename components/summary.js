@@ -16,16 +16,17 @@ export default function Summary() {
                 <div className="grid lg:grid-cols-3 gap-4 my-20 md:grid-cols-2 sm:grid-cols-1">
                     <IconCircle
                         iconPath="ethereum-1.svg"
-                        heading="On-chain NFT Receipt"
-                        content="Traceable, immutable, verifiable funding records as NFTs living permanently on Ethereum public blockchain." />
+                        heading="Immutable"
+                        content="For each donation, we mint an NFT receipt - a traceable, immutable funding record that will help drive the next century of scientific breakthroughs.
+                        " />
                     <IconCircle
                         iconPath="sync-alt-solid.svg"
-                        heading="From Donation to Creation"
-                        content="Bring donors into the sceicne via the NFT receipt and involve them in the journey from lab to life" />
+                        heading="Impact"
+                        content="Removing inefficiency, overhead, and insider politics means your donation will have significantly more impact, and faster, than traditional funding organizations." />
                     <IconCircle
                         iconPath="microscope-solid.svg"
-                        heading="Backing science, not beaureaucracy"
-                        content="Empower scientists to freely, openly, and rapidly pursue science. No years to publish, or political nonsense." />
+                        heading="Better Science"
+                        content="Empower scientists to freely, openly, and rapidly pursue scientific knowledge. No years to publish, or political nonsense. " />
                 </div>
 
             </div>

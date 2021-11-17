@@ -7,14 +7,14 @@ export default function MintWindow(props) {
 
     const [minValue, setMinValue] = useState(true);
     const [rightNetwork, setRightNetwork] = useState(true);
-    const [value, setValue] = useState(0.3);
+    const [value, setValue] = useState(0.3001);
     const [selectedPool, setSelectedPool] = useState('Pandemic Preparedness');
 
     const exRate = 4740.29;
     const userDonate = (event) => {
         setValue(event.target.value)
         //check value
-        if (event.target.value < 0.3)
+        if (event.target.value <= 0.3)
         {
             setMinValue(false)
         } else

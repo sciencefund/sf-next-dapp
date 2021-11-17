@@ -14,8 +14,7 @@ import ConnectWallet from "../components/connectWallet";
 import CheckoutScreen from "../components/checkoutScreen";
 import Summary from "../components/summary";
 import WhyNFT from "../components/whyNFT";
-import FundingPools from "../components/fundingPool";
-import Trace from "../components/trace";
+import HowItWorks from "../components/howitworks";
 import TraceScreen from "../components/traceScreen";
 
 
@@ -177,7 +176,7 @@ export default function Home()
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 			<div className='w-screen mx-auto'>
-				<section className='relative mx-auto bg-dark-water bg-fixed bg-cover w-screen'>
+				<section className='relative mx-auto bg-gradient-to-r from-gray-900 via-green-700 to-gray-900 bg-opacity-10 w-screen'>
 					{web3Provider ?
 						<ConnectWallet
 							onClick={disconnect}
@@ -199,7 +198,13 @@ export default function Home()
 						<h1 className='text-grey-900 text-6xl uppercase mb-6 font-bold tracking-wide'>
 							science fund
 						</h1>
-						<BigButton label="Learn more" />
+						<p className='mx-auto my-20 font-thin font-sans text-2xl md:w-96 sm:w-full '>  Bringing a continuously evolving impact trail to backers of scientific knowledge with NFTs and beyond.
+						</p>
+						<a href="#Donate">
+							<BigButton label="Learn more" onClick={() => { }} />
+						</a>
+					</div>
+					<div className="h-20">
 					</div>
 				</section>
 
@@ -208,15 +213,30 @@ export default function Home()
 					<Summary />
 				</section>
 
+				<section id="Donate">
 				<div className="w-screen bg-misty-forest bg-opacity-10 bg-cover h-full text-gray-300">
+						<div className="mx-auto text-center w-3/4 py-8">
+							<h1 className=' text-4xl'>
+								How It Works{" "}
+							</h1>
+							<div className="flex items-center justify-around">
+								<BigButton
+									label=
+									"Mint Tokens"
+									onClick={checkoutScreen}
+								/>
+								<BigButton
+									label="Trace Tokens"
+									onClick={traceScreen}
+								/>
 
+							</div>
+						</div>
 
-					<FundingPools onClick={checkoutScreen} account={address} />
-
-					<Trace onClick={traceScreen} account={address} />
-
+						<HowItWorks />
 					<WhyNFT />
 				</div>
+				</section>
 
 
 
@@ -243,9 +263,8 @@ export default function Home()
 
 
 			</div>
-			<footer className='flex flex-row justify-between my-2 mx-2'>
-				<a>@ 2021 Science Fund</a>
-				<a href='#'>All Rights Reserved.</a>
+			<footer className='mx-auto text-center my-2 mx-2 p-5'>
+				<a>@ 2021 Science Fund. All Rights Reserved.</a>
 			</footer>
 		</div>
 	);
