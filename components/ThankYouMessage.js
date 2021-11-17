@@ -36,37 +36,44 @@ export default function ThankYouMessage(props) {
 
     return (
 
-        <div className='my-10 max-w-lg mx-auto text-center w-3/5'>
-
-            <div className="my-10 h-24">
-                    <h1 className="text-blue-900 text-2xl font-thin my-5">Thank You!</h1>
-                <p className="text-sm w-4/5 mx-auto"> The transaction is sent successfully. Here is your transaction hash <a href="/" className="text-blue-900 text-sm break-words ">{txhash}</a></p>
-            </div>
+        <div className=''>
 
 
             {/* display real receipt */}
-            {tokenURI && <DisplayTokenURI json={tokenURI} />}
+            {tokenURI && <DisplayTokenURI json={tokenURI} />
+
+            }
             {!tokenURI && <div className='mx-auto  my-auto my-10 w-full h-96 bg-white rounded shadow-2xl p-2' style={{ height: "428px" }}>
                 <h1 className="text-blue-900 text-2xl font-thin my-10">Transaction Sent!</h1>
-                <p className="text-sm w-1/2 mx-auto"> The transaction is sent successfully to the Ethereum public blockchain.
+                <p className="text-sm w-3/4 mx-auto"> The transaction is sent successfully to the Ethereum Rinkeby Testnet.
                 </p>
-                <p className="my-24 px-5 w-1/2 mx-auto text-blue-900 italic">Waiting for your transaction to be mined ...</p>
+
+
+                <button className='flex items-center justify-center  block mx-auto bg-gray-900 text-white w-1/2 hover:bg-gray-700 py-2 px-4 my-20 rounded' >
+                    <div style={{ "borderTopColor": "transparent" }} className="w-6 h-6 border-2 border-solid border-gray-100 rounded-full animate-spin mx-2">
+                    </div>
+                    <h2>Processing</h2>
+                </button>
+
             </div >
             }
 
 
             <div className="h-48 mt-10">
-                <button className='block mx-auto bg-gray-900 text-white w-1/2 hover:bg-gray-700 py-2 px-4 my-8 rounded' >
-                    <h2>Save Your NFT Receipt</h2>
-                </button>
+                {tokenURI &&
+                    <>
+                    <button className='block mx-auto bg-gray-900 text-white w-1/2 hover:bg-gray-700 py-2 px-4 my-8 rounded' >
+                        <h2>Save your NFT receipt</h2>
+                    </button>
 
-                <button className='block mx-auto text-blue-900 w-1/2 hover:underline py-1  px-2 my-1 rounded'>
-                    <h2><a src="/">Share on social media</a></h2>
-                </button>
+                    <button className='block mx-auto text-blue-900 w-1/2 hover:underline py-1  px-2 my-1 rounded'>
+                        <h2><a href="/">Share on social media</a></h2>
+                    </button>
 
-                <button className='block mx-auto text-blue-900 w-1/2 hover:underline py-1 px-2 my-1 rounded'>
-                    <h2><a src="/">Link to trace your token</a></h2>
-                </button>
+                    <button className='block mx-auto text-blue-900 w-1/2 hover:underline py-1 px-2 my-1 rounded'>
+                        <h2><a href={`https://rinkeby.etherscan.io/tx/${ txhash }`}>See your transaction on Etherscan.io</a></h2>
+                    </button>
+                    </>}
             </div>
 
 
