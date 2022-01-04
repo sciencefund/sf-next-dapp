@@ -146,7 +146,8 @@ export default function Home()
 
 	}, [provider])
 
-	const checkoutScreen = () => {
+	const checkoutScreen = () =>
+	{
 		//start checkout screen
 		setStartCheckout(true);
 
@@ -156,7 +157,8 @@ export default function Home()
 		}
 	};
 
-	const traceScreen = () => {
+	const traceScreen = () =>
+	{
 		//start trace screen
 		setStartTrace(true);
 
@@ -169,7 +171,7 @@ export default function Home()
 
 
 	return (
-		<div className='w-screen mx-auto font-serif'>
+		<div className='w-screen mx-auto font-serif overflow-x-hidden'>
 			<Head>
 				<title>Science Fund</title>
 				<meta name='description' content='Science Fund Home Page' />
@@ -204,19 +206,19 @@ export default function Home()
 							<BigButton label="Learn more" onClick={() => { }} />
 						</a>
 					</div>
-					<div className="h-20">
+					<div className="h-18">
 					</div>
 				</section>
 
 
-				<section>
+				<section className="p-10">
 					<Summary />
 				</section>
 
 				<section id="Donate">
-				<div className="w-screen bg-misty-forest bg-opacity-10 bg-cover h-full text-gray-300">
+					<div className="w-screen bg-misty-forest bg-opacity-10 bg-cover h-full text-gray-300 py-24 pb-36">
 						<div className="mx-auto text-center w-3/4 py-8">
-							<h1 className=' text-4xl'>
+							<h1 className='mb-4 text-4xl'>
 								How It Works{" "}
 							</h1>
 							<div className="flex items-center justify-around">
@@ -229,19 +231,22 @@ export default function Home()
 									label="Trace Tokens"
 									onClick={traceScreen}
 								/>
-
 							</div>
 						</div>
-
 						<HowItWorks />
-					<WhyNFT />
-				</div>
+
+					</div>
 				</section>
 
+				<section id="pandemic">
 
+				</section>
+
+				{/* <WhyNFT /> */}
 
 				{startCheckout && contract && <CheckoutScreen
-					close={() => {
+					close={() =>
+					{
 						setStartCheckout(false);
 					}}
 					contract={contract}
@@ -250,7 +255,8 @@ export default function Home()
 				/>}
 
 				{startTrace && web3Provider && <TraceScreen
-					close={() => {
+					close={() =>
+					{
 						setStartTrace(false);
 					}}
 					contract={contract}
