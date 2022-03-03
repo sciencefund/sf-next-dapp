@@ -82,3 +82,5 @@ npx hardhat test
 #### deploy metadata file on arweave 
 
 follow the instructions [here](https://docs.arweave.org/developers/tools/textury-arkb)
+
+#### this prototype is deployed [https://science-fund.herokuapp.com/](https://science-fund.herokuapp.com/) with contracts on Rinkeby
